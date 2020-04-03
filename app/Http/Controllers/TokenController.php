@@ -25,8 +25,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Bunq\ApiContext\ApiContextManager;
 use App\Exceptions\ImportException;
+use App\Ynab\Request\UserInformationRequest;
+use App\Ynab\Response\UserInformationResponse;
 use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
 use GrumpyDictator\FFIIIApiSupport\Request\SystemInformationRequest;
 use GrumpyDictator\FFIIIApiSupport\Response\SystemInformationResponse;
@@ -50,8 +51,8 @@ class TokenController extends Controller
     public function doValidate(): JsonResponse
     {
         $response = ['result' => 'OK', 'message' => null];
-        $token    = (string) config('bunq.access_token');
-        $uri      = (string) config('bunq.uri');
+        $token    = (string) config('ynab.access_token');
+        $uri      = (string) config('ynab.uri');
         app('log')->debug(sprintf('Going to try and access %s', $uri));
         $request = new SystemInformationRequest($uri, $token);
         try {
@@ -64,7 +65,7 @@ class TokenController extends Controller
         }
 
         if (isset($result)) {
-            $minimum = config('bunq.minimum_version');
+            $minimum = config('ynab.minimum_version');
             $compare = version_compare($minimum, $result->version);
             if (1 === $compare) {
                 $errorMessage = sprintf('Your Firefly III version %s is below the minimum required version %s', $result->version, $minimum);
@@ -72,13 +73,13 @@ class TokenController extends Controller
             }
         }
 
-        // validate connection to bunq, create API context.
-        try {
-            ApiContextManager::getApiContext();
-        } catch (ApiHttpException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            $errorMessage = sprintf('bunq complained: %s', $e->getMessage());
+        $uri     = (string) config('ynab.api_uri');
+        $token   = (string) config('ynab.api_code');
+        $request = new UserInformationRequest($uri, $token);
+        /** @var UserInformationResponse $result */
+        $result = $request->get();
+        if ('' === $result->id) {
+            $errorMessage = sprintf('No user ID from YNAB');
             $response     = ['result' => 'NOK', 'message' => $errorMessage];
         }
 
@@ -89,12 +90,13 @@ class TokenController extends Controller
      * Same thing but not over JSON.
      *
      * @throws ImportException
+     * @throws \App\Exceptions\YnabApiHttpException
      * @return Factory|RedirectResponse|Redirector|View
      */
     public function index()
     {
-        $token = (string) config('bunq.access_token');
-        $uri   = (string) config('bunq.uri');
+        $token = (string) config('ynab.access_token');
+        $uri   = (string) config('ynab.uri');
         app('log')->debug(sprintf('Going to try and access %s', $uri));
         $request      = new SystemInformationRequest($uri, $token);
         $errorMessage = 'No error message.';
@@ -112,7 +114,7 @@ class TokenController extends Controller
         }
 
         if (false === $isError) {
-            $minimum = config('bunq.minimum_version');
+            $minimum = config('ynab.minimum_version');
             $compare = version_compare($minimum, $result->version);
         }
         if (false === $isError && 1 === $compare) {
@@ -120,14 +122,15 @@ class TokenController extends Controller
             $isError      = true;
         }
 
-        // validate connection to bunq, create API context.
-        try {
-            ApiContextManager::getApiContext();
-        } catch (ApiHttpException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
-            $errorMessage = sprintf('bunq complained: %s', $e->getMessage());
+        $uri   = (string) config('ynab.api_uri');
+        $token = (string) config('ynab.api_code');
+
+        $request = new UserInformationRequest($uri, $token);
+        /** @var UserInformationResponse $result */
+        $result = $request->get();
+        if ('' === $result->id) {
             $isError      = true;
+            $errorMessage = 'No user ID from YNAB';
         }
 
         if (false === $isError) {

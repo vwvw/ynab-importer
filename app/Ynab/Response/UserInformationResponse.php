@@ -1,6 +1,6 @@
 <?php
 /**
- * ynab.php
+ * UserInformationResponse.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of the Firefly III YNAB importer
@@ -20,13 +20,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace App\Ynab\Response;
 
-return [
-    'version'         => '1.0.0-alpha.1',
-    'access_token'    => env('FIREFLY_III_ACCESS_TOKEN', ''),
-    'uri'             => env('FIREFLY_III_URI', ''),
-    'api_uri'         => 'https://api.youneedabudget.com/v1',
-    'api_code'        => env('YNAB_API_CODE', ''),
-    'minimum_version' => '5.1.1',
-];
+
+/**
+ * Class UserInformationResponse
+ */
+class UserInformationResponse extends Response
+{
+    /** @var string */
+    public $id;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct(array $data)
+    {
+        $this->id = $data['user']['id'] ?? '';
+
+    }
+}

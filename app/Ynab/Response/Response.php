@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
 /**
- * ynab.php
- * Copyright (c) 2020 james@firefly-iii.org
+ * Response.php
+ * Copyright (c) 2020 james@firefly-iii.org.
  *
- * This file is part of the Firefly III YNAB importer
- * (https://github.com/firefly-iii/ynab-importer).
+ * This file is part of the Firefly III CSV importer
+ * (https://github.com/firefly-iii/csv-importer).
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,13 +22,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-return [
-    'version'         => '1.0.0-alpha.1',
-    'access_token'    => env('FIREFLY_III_ACCESS_TOKEN', ''),
-    'uri'             => env('FIREFLY_III_URI', ''),
-    'api_uri'         => 'https://api.youneedabudget.com/v1',
-    'api_code'        => env('YNAB_API_CODE', ''),
-    'minimum_version' => '5.1.1',
-];
+namespace App\Ynab\Response;
+/**
+ * Class Response.
+ */
+abstract class Response
+{
+    /**
+     * Response constructor.
+     *
+     * @param array $data
+     */
+    abstract public function __construct(array $data);
+}
