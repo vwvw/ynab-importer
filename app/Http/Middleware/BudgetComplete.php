@@ -44,7 +44,7 @@ class BudgetComplete
     public function handle(Request $request, Closure $next)
     {
         if (session()->has(Constants::BUDGET_COMPLETE_INDICATOR) && true === session()->get(Constants::BUDGET_COMPLETE_INDICATOR)) {
-            return redirect()->route('import.configuration.index');
+            return redirect()->route('import.configure.index');
         }
 
         return $next($request);

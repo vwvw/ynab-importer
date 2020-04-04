@@ -30,7 +30,6 @@ use App\Http\Middleware\BudgetComplete;
 use App\Http\Request\BudgetPostRequest;
 use App\Services\Configuration\Configuration;
 use App\Services\Session\Constants;
-use App\Services\Storage\StorageService;
 use App\Ynab\Request\GetBudgetsRequest;
 use App\Ynab\Response\GetBudgetsResponse;
 use Illuminate\Contracts\View\Factory;
@@ -53,8 +52,6 @@ class BudgetController extends Controller
     }
 
     /**
-     * TODO at this point maybe need to do something with config? Since user just uploaded?
-     *
      * @throws \App\Exceptions\YnabApiHttpException
      * @return Factory|View
      */
@@ -67,12 +64,10 @@ class BudgetController extends Controller
         $uri     = (string) config('ynab.api_uri');
         $token   = (string) config('ynab.api_code');
         $request = new GetBudgetsRequest($uri, $token);
-        /** @var GetBudgetsResponse $response */
-        $response = $request->get();
-        $budgets  = $response->budgets;
+        /** @var GetBudgetsResponse $budgets */
+        $budgets = $request->get();
 
-
-        return view('import.budgets.index', compact('mainTitle', 'subTitle','budgets'));
+        return view('import.budgets.index', compact('mainTitle', 'subTitle', 'budgets'));
     }
 
     /**
@@ -102,7 +97,7 @@ class BudgetController extends Controller
         session()->put(Constants::BUDGET_COMPLETE_INDICATOR, true);
 
         // redirect to import things?
-        return redirect()->route('import.accounts.index');
+        return redirect()->route('import.configure.index');
     }
 }
 

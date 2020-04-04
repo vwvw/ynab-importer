@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace App\Services\Configuration;
 
+use Carbon\Carbon;
 use RuntimeException;
 
 /**
@@ -41,15 +42,46 @@ class Configuration
     /** @var bool */
     private $skipBudgetSelection;
 
+    /** @var bool */
+    private $skipConfigurationForm;
+
+    /** @var string */
+    private $dateNotAfter;
+    /** @var string */
+    private $dateNotBefore;
+    /** @var string */
+    private $dateRange;
+    /** @var int */
+    private $dateRangeNumber;
+    /** @var string */
+    private $dateRangeUnit;
+    /** @var bool */
+    private $doMapping;
+    /** @var array */
+    private $mapping;
+    /** @var bool */
+    private $rules;
+    /** @var bool */
+    private $skipForm;
 
     /**
      * Configuration constructor.
      */
     private function __construct()
     {
-        $this->version             = self::VERSION;
-        $this->budgets             = [];
-        $this->skipBudgetSelection = false;
+        $this->version               = self::VERSION;
+        $this->budgets               = [];
+        $this->skipBudgetSelection   = false;
+        $this->skipConfigurationForm = false;
+        $this->dateNotBefore         = '';
+        $this->dateNotAfter          = '';
+        $this->dateRange             = 'all';
+        $this->dateRangeNumber       = 30;
+        $this->dateRangeUnit         = 'd';
+        $this->doMapping             = false;
+        $this->mapping               = [];
+        $this->rules                 = true;
+        $this->skipForm              = false;
     }
 
     /**
@@ -59,11 +91,21 @@ class Configuration
      */
     public static function fromArray(array $array): self
     {
-        $version                     = $array['version'] ?? 1;
-        $object                      = new self;
-        $object->version             = $version;
-        $object->budgets             = $array['budgets'] ?? [];
-        $object->skipBudgetSelection = $array['skip_budget_selection'] ?? false;
+        $version                       = $array['version'] ?? 1;
+        $object                        = new self;
+        $object->version               = $version;
+        $object->budgets               = $array['budgets'] ?? [];
+        $object->skipBudgetSelection   = $array['skip_budget_selection'] ?? false;
+        $object->skipConfigurationForm = $array['skip_configuration_form'] ?? false;
+        $object->dateNotBefore         = $array['date_not_before'] ?? '';
+        $object->dateNotAfter          = $array['date_not_after'] ?? '';
+        $object->dateRange             = $array['date_range'] ?? 'all';
+        $object->dateRangeNumber       = $array['date_range_number'] ?? 30;
+        $object->dateRangeUnit         = $array['date_range_unit'] ?? 'd';
+        $object->doMapping             = $array['do_mapping'] ?? false;
+        $object->mapping               = $array['mapping'] ?? [];
+        $object->rules                 = $array['rules'] ?? false;
+        $object->skipForm              = $array['skip_form'] ?? false;
 
         return $object;
     }
@@ -90,12 +132,72 @@ class Configuration
      */
     public static function fromRequest(array $array): self
     {
-        $object                      = new self;
-        $object->version             = self::VERSION;
-        $object->budgets             = $array['budgets'] ?? [];
-        $object->skipBudgetSelection = $array['skip_budget_selection'] ?? false;
+        $object                        = new self;
+        $object->version               = self::VERSION;
+        $object->budgets               = $array['budgets'] ?? [];
+        $object->skipBudgetSelection   = $array['skip_budget_selection'] ?? false;
+        $object->skipConfigurationForm = $array['skip_configuration_form'] ?? false;
+        $object->dateNotBefore         = $array['date_not_before'] ?? '';
+        $object->dateNotAfter          = $array['date_not_after'] ?? '';
+        $object->dateRange             = $array['date_range'] ?? 'all';
+        $object->dateRangeNumber       = $array['date_range_number'] ?? 30;
+        $object->dateRangeUnit         = $array['date_range_unit'] ?? 'd';
+        $object->doMapping             = $array['do_mapping'] ?? false;
+        $object->mapping               = $array['mapping'] ?? [];
+        $object->rules                 = $array['rules'] ?? false;
+        $object->skipForm              = $array['skip_form'] ?? false;
+
+        // respond to date range in request:
+        switch ($object->dateRange) {
+            case 'all':
+                $object->dateRangeUnit   = null;
+                $object->dateRangeNumber = null;
+                $object->dateNotBefore   = null;
+                $object->dateNotAfter    = null;
+                break;
+            case 'partial':
+                $object->dateNotAfter  = null;
+                $object->dateNotBefore = self::calcDateNotBefore($object->dateRangeUnit, $object->dateRangeNumber);
+                break;
+            case 'range':
+                $before = $object->dateNotBefore;
+                $after  = $object->dateNotAfter;
+
+                if (null !== $before && null !== $after && $object->dateNotBefore > $object->dateNotAfter) {
+                    [$before, $after] = [$after, $before];
+                }
+
+                $object->dateNotBefore = null === $before ? null : $before->format('Y-m-d');
+                $object->dateNotAfter  = null === $after ? null : $after->format('Y-m-d');
+        }
 
         return $object;
+    }
+
+    /**
+     * @param string $unit
+     * @param int    $number
+     *
+     * @return string|null
+     */
+    private static function calcDateNotBefore(string $unit, int $number): ?string
+    {
+        $functions = [
+            'd' => 'subDays',
+            'w' => 'subWeeks',
+            'm' => 'subMonths',
+            'y' => 'subYears',
+        ];
+        if (isset($functions[$unit])) {
+            $today    = Carbon::now();
+            $function = $functions[$unit];
+            $today->$function($number);
+
+            return $today->format('Y-m-d');
+        }
+        app('log')->error(sprintf('Could not parse date setting. Unknown key "%s"', $unit));
+
+        return null;
     }
 
     /**
@@ -103,12 +205,26 @@ class Configuration
      *
      * @return static
      */
-    private static function fromDefaultFile(array $data): self
+    private static function fromDefaultFile(array $array): self
     {
-        $object                      = new self;
-        $object->version             = $data['version'] ?? self::VERSION;
-        $object->budgets             = $data['budgets'] ?? [];
-        $object->skipBudgetSelection = $data['skip_budget_selection'] ?? false;
+        $object                        = new self;
+        $object->version               = $array['version'] ?? self::VERSION;
+        $object->budgets               = $array['budgets'] ?? [];
+        $object->skipBudgetSelection   = $array['skip_budget_selection'] ?? false;
+        $object->skipConfigurationForm = $array['skip_configuration_form'] ?? false;
+        $object->dateNotBefore         = $array['date_not_before'] ?? '';
+        $object->dateNotAfter          = $array['date_not_after'] ?? '';
+        $object->dateRange             = $array['date_range'] ?? 'all';
+        $object->dateRangeNumber       = $array['date_range_number'] ?? 30;
+        $object->dateRangeUnit         = $array['date_range_unit'] ?? 'd';
+        $object->doMapping             = $array['do_mapping'] ?? false;
+        $object->mapping               = $array['mapping'] ?? [];
+        $object->rules                 = $array['rules'] ?? false;
+        $object->skipForm              = $array['skip_form'] ?? false;
+
+        if ('partial' === $array['date_range']) {
+            $object->dateNotBefore = self::calcDateNotBefore($object->dateRangeUnit, $object->dateRangeNumber);
+        }
 
         return $object;
     }
@@ -119,9 +235,19 @@ class Configuration
     public function toArray(): array
     {
         return [
-            'version'               => $this->version,
-            'budgets'               => $this->budgets,
-            'skip_budget_selection' => $this->skipBudgetSelection,
+            'version'                 => $this->version,
+            'budgets'                 => $this->budgets,
+            'skip_budget_selection'   => $this->skipBudgetSelection,
+            'skip_configuration_form' => $this->skipConfigurationForm,
+            'date_not_before'         => $this->dateNotBefore,
+            'date_not_after'          => $this->dateNotAfter,
+            'date_range'              => $this->dateRange,
+            'date_range_number'       => $this->dateRangeNumber,
+            'date_range_unit'         => $this->dateRangeUnit,
+            'do_mapping'              => $this->doMapping,
+            'mapping'                 => $this->mapping,
+            'rules'                   => $this->rules,
+            'skip_form'               => $this->skipForm,
         ];
     }
 
@@ -156,5 +282,104 @@ class Configuration
     {
         $this->skipBudgetSelection = $skipBudgetSelection;
     }
+
+    /**
+     * @return bool
+     */
+    public function isSkipConfigurationForm(): bool
+    {
+        return $this->skipConfigurationForm;
+    }
+
+    /**
+     * @param bool $skipConfigurationForm
+     */
+    public function setSkipConfigurationForm(bool $skipConfigurationForm): void
+    {
+        $this->skipConfigurationForm = $skipConfigurationForm;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion(): int
+    {
+        return $this->version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateNotAfter(): string
+    {
+        return $this->dateNotAfter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateNotBefore(): string
+    {
+        return $this->dateNotBefore;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateRange(): string
+    {
+        return $this->dateRange;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDateRangeNumber(): int
+    {
+        return $this->dateRangeNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateRangeUnit(): string
+    {
+        return $this->dateRangeUnit;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDoMapping(): bool
+    {
+        return $this->doMapping;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMapping(): array
+    {
+        return $this->mapping;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRules(): bool
+    {
+        return $this->rules;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSkipForm(): bool
+    {
+        return $this->skipForm;
+    }
+
+
+
 
 }

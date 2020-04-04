@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 /**
- * GetBudgetsResponse.php
+ * GetAccountsResponse.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of the Firefly III YNAB importer
@@ -23,16 +23,15 @@ declare(strict_types=1);
 
 namespace App\Ynab\Response;
 
-
-use App\Ynab\Object\Budget;
+use App\Ynab\Object\Account;
+use Countable;
 use Illuminate\Support\Collection;
 use Iterator;
-use Countable;
 
 /**
- * Class GetBudgetsResponse
+ * Class GetAccountsResponse
  */
-class GetBudgetsResponse extends Response implements Iterator, Countable
+class GetAccountsResponse extends Response implements Iterator, Countable
 {
     /** @var Collection */
     private $collection;
@@ -45,9 +44,10 @@ class GetBudgetsResponse extends Response implements Iterator, Countable
     public function __construct(array $data)
     {
         $this->collection = new Collection;
-        $budgets       = $data['budgets'] ?? [];
-        foreach ($budgets as $budget) {
-            $model = Budget::fromArray($budget);
+        $accounts         = $data['accounts'] ?? [];
+        /** @var array $account */
+        foreach ($accounts as $account) {
+            $model = Account::fromArray($account);
             $this->collection->push($model);
         }
     }
@@ -71,10 +71,10 @@ class GetBudgetsResponse extends Response implements Iterator, Countable
      * Return the current element.
      *
      * @link  https://php.net/manual/en/iterator.current.php
-     * @return Budget
+     * @return Account
      * @since 5.0.0
      */
-    public function current(): ?Budget
+    public function current(): ?Account
     {
         return $this->collection->get($this->position);
     }

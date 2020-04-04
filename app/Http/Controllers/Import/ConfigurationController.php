@@ -24,18 +24,19 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Import;
 
-use App\Bunq\ApiContext\ApiContextManager;
-use App\Bunq\Requests\MonetaryAccountList;
 use App\Exceptions\ImportException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\ConfigComplete;
-use App\Http\Middleware\ConfigurationPostRequest;
+use App\Http\Request\ConfigurationPostRequest;
 use App\Services\Configuration\Configuration;
 use App\Services\Session\Constants;
 use App\Services\Storage\StorageService;
+use App\Ynab\Request\GetAccountsRequest as YnabAccountsRequest;
+use App\Ynab\Request\GetBudgetsRequest;
+use App\Ynab\Response\GetBudgetsResponse;
 use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
-use GrumpyDictator\FFIIIApiSupport\Model\Account;
 use GrumpyDictator\FFIIIApiSupport\Request\GetAccountsRequest;
+use GrumpyDictator\FFIIIApiSupport\Response\GetAccountsResponse;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -91,57 +92,21 @@ class ConfigurationController extends Controller
         $mainTitle = 'Import from YNAB';
         $subTitle  = 'Configure your YNAB import';
 
+        // get config:
         $configuration = Configuration::fromArray([]);
         if (session()->has(Constants::CONFIGURATION)) {
             $configuration = Configuration::fromArray(session()->get(Constants::CONFIGURATION));
         }
         // if config says to skip it, skip it:
-        if (null !== $configuration && true === $configuration->isSkipForm()) {
-            // skipForm
+        if (null !== $configuration && true === $configuration->isSkipConfigurationForm()) {
+            // skipForm, go to YNAB download
             return redirect()->route('import.download.index');
         }
-        // get list of asset accounts in Firefly III
-        $uri     = (string) config('ynab.uri');
-        $token   = (string) config('ynab.access_token');
-        $request = new GetAccountsRequest($uri, $token);
-        $request->setType(GetAccountsRequest::ASSET);
-        $ff3Accounts = $request->get();
 
-        // TODO get accounts from YNAB.
-        echo '123';
-        exit;
+        $ff3Accounts  = $this->getFireflyIIIAccounts();
+        $ynabAccounts = $this->getYnabAccounts($configuration);
 
-        $combinedAccounts = [];
-        foreach ($ynabAccounts as $ynabAccount) {
-            $bunqAccount['ff3_id']       = null;
-            $bunqAccount['ff3_name']     = null;
-            $bunqAccount['ff3_type']     = null;
-            $bunqAccount['ff3_iban']     = null;
-            $bunqAccount['ff3_currency'] = null;
-            /** @var Account $ff3Account */
-            foreach ($ff3Accounts as $ff3Account) {
-                if ($bunqAccount['currency'] === $ff3Account->currencyCode && $bunqAccount['iban'] === $ff3Account->iban
-                    && 'CANCELLED' !== $bunqAccount['status']
-                ) {
-                    $bunqAccount['ff3_id']       = $ff3Account->id;
-                    $bunqAccount['ff3_name']     = $ff3Account->name;
-                    $bunqAccount['ff3_type']     = $ff3Account->type;
-                    $bunqAccount['ff3_iban']     = $ff3Account->iban;
-                    $bunqAccount['ff3_currency'] = $ff3Account->currencyCode;
-                    $bunqAccount['ff3_uri']      = sprintf('%saccounts/show/%d', $uri, $ff3Account->id);
-                }
-            }
-            $combinedAccounts[] = $bunqAccount;
-        }
-
-        $mapping = '{}';
-        if (null !== $configuration) {
-            $mapping = base64_encode(json_encode($configuration->getMapping(), JSON_THROW_ON_ERROR, 512));
-        }
-
-        return view(
-            'import.configuration.index', compact('mainTitle', 'subTitle', 'ff3Accounts', 'combinedAccounts', 'configuration', 'bunqAccounts', 'mapping')
-        );
+        return view('import.configuration.index', compact('mainTitle', 'subTitle', 'ff3Accounts', 'ynabAccounts', 'configuration'));
     }
 
     /**
@@ -165,5 +130,72 @@ class ConfigurationController extends Controller
 
         // redirect to import things?
         return redirect()->route('import.download.index');
+    }
+
+    /**
+     * @throws ApiHttpException
+     * @return iterable
+     */
+    private function getFireflyIIIAccounts(): iterable
+    {
+        // get list of asset accounts in Firefly III
+        $uri     = (string) config('ynab.uri');
+        $token   = (string) config('ynab.access_token');
+        $request = new GetAccountsRequest($uri, $token);
+        $request->setType(GetAccountsRequest::ASSET);
+
+        /** @var GetAccountsResponse $ff3Accounts */
+        return $request->get();
+    }
+
+    /**
+     * @param Configuration $configuration
+     *
+     * @throws \App\Exceptions\YnabApiHttpException
+     * @return iterable
+     */
+    private function getYnabAccounts(Configuration $configuration): iterable
+    {
+
+        $budgets    = $configuration->getBudgets();
+        $apiBudgets = $this->getApiBudgets();
+        $uri        = (string) config('ynab.api_uri');
+        $token      = (string) config('ynab.api_code');
+        $return     = [];
+        /** @var string $budgetId */
+        foreach ($budgets as $budgetId) {
+            $return[$budgetId] = $return[$budgetId] ?? [
+                    'id'       => $budgetId,
+                    'budget'   => $apiBudgets[$budgetId] ?? [],
+                    'accounts' => [],
+                ];
+            $request           = new YnabAccountsRequest($uri, $token, $budgetId);
+            /** @var GetAccountsResponse $set */
+            $set = $request->get();
+            // TODO better code.
+            foreach ($set as $account) {
+                $return[$budgetId]['accounts'][] = $account;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
+    private function getApiBudgets(): array
+    {
+        $uri     = (string) config('ynab.api_uri');
+        $token   = (string) config('ynab.api_code');
+        $request = new GetBudgetsRequest($uri, $token);
+        /** @var GetBudgetsResponse $budgets */
+        $budgets = $request->get();
+        $result  = [];
+        foreach ($budgets as $budget) {
+            $result[$budget->id] = $budget->toArray();
+        }
+
+        return $result;
     }
 }

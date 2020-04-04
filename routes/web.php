@@ -54,6 +54,9 @@ Route::post('/import/budgets', ['uses' => 'Import\BudgetController@postIndex', '
 Route::get('/import/configure', ['uses' => 'Import\ConfigurationController@index', 'as' => 'import.configure.index']);
 Route::post('/import/configure', ['uses' => 'Import\ConfigurationController@postIndex', 'as' => 'import.configure.post']);
 
+
+
+
 // download from YNAB
 Route::get('/import/download', ['uses' => 'Import\DownloadController@index', 'as' => 'import.download.index']);
 Route::any('/import/download/start', ['uses' => 'Import\DownloadController@start', 'as' => 'import.download.start']);

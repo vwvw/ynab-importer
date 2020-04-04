@@ -49,16 +49,33 @@ class Budget
      * Budget constructor.
      *
      * @param array $data
+     *
+     * @return Budget
      */
-    public function __construct(array $data)
+    public static function fromArray(array $data): self
     {
-        $this->id           = $data['id'];
-        $this->name         = $data['name'];
-        $this->lastModified = Carbon::createFromFormat('Y-m-d\TH:i:sP', $data['last_modified_on']);
-        $this->firstMonth   = Carbon::createFromFormat('Y-m-d', $data['first_month']);
-        $this->lastMonth    = Carbon::createFromFormat('Y-m-d', $data['last_month']);
-        $this->dateFormat   = $data['date_format']['format'];
-        $this->currencyCode = $data['currency_format']['iso_code'];
+        $model               = new Budget;
+        $model->id           = $data['id'];
+        $model->name         = $data['name'];
+        $model->lastModified = Carbon::createFromFormat('Y-m-d\TH:i:sP', $data['last_modified_on']);
+        $model->firstMonth   = Carbon::createFromFormat('Y-m-d', $data['first_month']);
+        $model->lastMonth    = Carbon::createFromFormat('Y-m-d', $data['last_month']);
+        $model->dateFormat   = $data['date_format']['format'];
+        $model->currencyCode = $data['currency_format']['iso_code'];
+
+        return $model;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'currency_code' => $this->currencyCode,
+        ];
     }
 
 }
