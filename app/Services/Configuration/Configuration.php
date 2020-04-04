@@ -63,6 +63,8 @@ class Configuration
     private $rules;
     /** @var bool */
     private $skipForm;
+    /** @var array */
+    private $accounts;
 
     /**
      * Configuration constructor.
@@ -82,6 +84,7 @@ class Configuration
         $this->mapping               = [];
         $this->rules                 = true;
         $this->skipForm              = false;
+        $this->accounts              = [];
     }
 
     /**
@@ -106,6 +109,7 @@ class Configuration
         $object->mapping               = $array['mapping'] ?? [];
         $object->rules                 = $array['rules'] ?? false;
         $object->skipForm              = $array['skip_form'] ?? false;
+        $object->accounts              = $array['accounts'] ?? [];
 
         return $object;
     }
@@ -126,52 +130,83 @@ class Configuration
     }
 
     /**
-     * @param array $array
-     *
-     * @return $this
+     * @param string $dateNotAfter
      */
-    public static function fromRequest(array $array): self
+    public function setDateNotAfter(string $dateNotAfter): void
     {
-        $object                        = new self;
-        $object->version               = self::VERSION;
-        $object->budgets               = $array['budgets'] ?? [];
-        $object->skipBudgetSelection   = $array['skip_budget_selection'] ?? false;
-        $object->skipConfigurationForm = $array['skip_configuration_form'] ?? false;
-        $object->dateNotBefore         = $array['date_not_before'] ?? '';
-        $object->dateNotAfter          = $array['date_not_after'] ?? '';
-        $object->dateRange             = $array['date_range'] ?? 'all';
-        $object->dateRangeNumber       = $array['date_range_number'] ?? 30;
-        $object->dateRangeUnit         = $array['date_range_unit'] ?? 'd';
-        $object->doMapping             = $array['do_mapping'] ?? false;
-        $object->mapping               = $array['mapping'] ?? [];
-        $object->rules                 = $array['rules'] ?? false;
-        $object->skipForm              = $array['skip_form'] ?? false;
+        $this->dateNotAfter = $dateNotAfter;
+    }
 
+    /**
+     * @param string $dateNotBefore
+     */
+    public function setDateNotBefore(string $dateNotBefore): void
+    {
+        $this->dateNotBefore = $dateNotBefore;
+    }
+
+    /**
+     * @param string $dateRange
+     */
+    public function setDateRange(string $dateRange): void
+    {
+        $this->dateRange = $dateRange;
+    }
+
+    /**
+     * @param int $dateRangeNumber
+     */
+    public function setDateRangeNumber(int $dateRangeNumber): void
+    {
+        $this->dateRangeNumber = $dateRangeNumber;
+    }
+
+    /**
+     * @param string $dateRangeUnit
+     */
+    public function setDateRangeUnit(string $dateRangeUnit): void
+    {
+        $this->dateRangeUnit = $dateRangeUnit;
+    }
+
+    /**
+     * @param bool $doMapping
+     */
+    public function setDoMapping(bool $doMapping): void
+    {
+        $this->doMapping = $doMapping;
+    }
+
+
+
+    /**
+     *
+     */
+    public function updateDates(): void
+    {
         // respond to date range in request:
-        switch ($object->dateRange) {
+        switch ($this->dateRange) {
             case 'all':
-                $object->dateRangeUnit   = null;
-                $object->dateRangeNumber = null;
-                $object->dateNotBefore   = null;
-                $object->dateNotAfter    = null;
+                $this->dateRangeUnit   = null;
+                $this->dateRangeNumber = null;
+                $this->dateNotBefore   = null;
+                $this->dateNotAfter    = null;
                 break;
             case 'partial':
-                $object->dateNotAfter  = null;
-                $object->dateNotBefore = self::calcDateNotBefore($object->dateRangeUnit, $object->dateRangeNumber);
+                $this->dateNotAfter  = null;
+                $this->dateNotBefore = self::calcDateNotBefore($this->dateRangeUnit, $this->dateRangeNumber);
                 break;
             case 'range':
-                $before = $object->dateNotBefore;
-                $after  = $object->dateNotAfter;
+                $before = $this->dateNotBefore;
+                $after  = $this->dateNotAfter;
 
-                if (null !== $before && null !== $after && $object->dateNotBefore > $object->dateNotAfter) {
+                if (null !== $before && null !== $after && $this->dateNotBefore > $this->dateNotAfter) {
                     [$before, $after] = [$after, $before];
                 }
 
-                $object->dateNotBefore = null === $before ? null : $before->format('Y-m-d');
-                $object->dateNotAfter  = null === $after ? null : $after->format('Y-m-d');
+                $this->dateNotBefore = null === $before ? null : $before->format('Y-m-d');
+                $this->dateNotAfter  = null === $after ? null : $after->format('Y-m-d');
         }
-
-        return $object;
     }
 
     /**
@@ -221,6 +256,7 @@ class Configuration
         $object->mapping               = $array['mapping'] ?? [];
         $object->rules                 = $array['rules'] ?? false;
         $object->skipForm              = $array['skip_form'] ?? false;
+        $object->accounts              = $array['accounts'] ?? [];
 
         if ('partial' === $array['date_range']) {
             $object->dateNotBefore = self::calcDateNotBefore($object->dateRangeUnit, $object->dateRangeNumber);
@@ -248,8 +284,27 @@ class Configuration
             'mapping'                 => $this->mapping,
             'rules'                   => $this->rules,
             'skip_form'               => $this->skipForm,
+            'accounts'                => $this->accounts,
         ];
     }
+
+
+    /**
+     * @return array
+     */
+    public function getAccounts(): array
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * @param array $accounts
+     */
+    public function setAccounts(array $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
 
     /**
      * @return array
@@ -372,14 +427,29 @@ class Configuration
     }
 
     /**
+     * @param bool $rules
+     */
+    public function setRules(bool $rules): void
+    {
+        $this->rules = $rules;
+    }
+
+    /**
+     * @param bool $skipForm
+     */
+    public function setSkipForm(bool $skipForm): void
+    {
+        $this->skipForm = $skipForm;
+    }
+
+
+    /**
      * @return bool
      */
     public function isSkipForm(): bool
     {
         return $this->skipForm;
     }
-
-
 
 
 }

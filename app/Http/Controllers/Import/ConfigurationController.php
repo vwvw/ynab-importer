@@ -119,9 +119,42 @@ class ConfigurationController extends Controller
         app('log')->debug(sprintf('Now at %s', __METHOD__));
         // store config on drive.
 
-        $fromRequest   = $request->getAll();
-        $configuration = Configuration::fromRequest($fromRequest);
-        $config        = StorageService::storeContent(json_encode($configuration, JSON_THROW_ON_ERROR, 512));
+        $fromRequest = $request->getAll();
+
+        // get config from session
+        $configuration = Configuration::fromArray([]);
+        if (session()->has(Constants::CONFIGURATION)) {
+            $configuration = Configuration::fromArray(session()->get(Constants::CONFIGURATION));
+        }
+
+        // append data
+        $accounts = [];
+        foreach ($fromRequest['do_import'] as $budgetId => $list) {
+            foreach (array_keys($list) as $accountId) {
+                $accounts[$budgetId][$accountId] = false;
+                if (isset($fromRequest['accounts'][$accountId])) {
+                    $accounts[$budgetId][$accountId] = (int) $fromRequest['accounts'][$accountId];
+                }
+            }
+        }
+        $configuration->setAccounts($accounts);
+        $configuration->setRules($fromRequest['rules']);
+        $configuration->setSkipForm($fromRequest['skip_form']);
+
+        // date etc.
+        $configuration->setDateNotBefore($fromRequest['date_not_before'] ?? '');
+        $configuration->setDateNotAfter($fromRequest['date_not_after'] ?? '');
+        $configuration->setDateRange($fromRequest['date_range'] ?? 'all');
+        $configuration->setDateRangeNumber($fromRequest['date_range_number'] ?? 30);
+
+        // respond to date set:
+        $configuration->updateDates();
+
+        $configuration->setDoMapping($fromRequest['do_mapping']);
+
+        // store in session, store on drive.
+        session()->put(Constants::CONFIGURATION, $configuration->toArray());
+        $config = StorageService::storeContent(json_encode($configuration, JSON_THROW_ON_ERROR, 512));
 
         session()->put(Constants::CONFIGURATION, $configuration->toArray());
 

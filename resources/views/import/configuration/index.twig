@@ -40,17 +40,18 @@
                                 <div class="col-sm-3">Accounts</div>
                                 <div class="col-sm-9">
                                     {% for budgetId, budgetInfo in ynabAccounts %}
+                                        <input type="hidden" name="budgets[]" value="{{ budgetId }}" />
                                         <h5>Import from YNAB budget "<a
                                                     href="https://app.youneedabudget.com/{{ budgetId }}/budget">{{ budgetInfo.budget.name }}</a>" ({{ budgetInfo.budget.currency_code }})</h5>
                                         {% for account in budgetInfo.accounts %}
                                             <div class="form-check">
                                                 <input class="form-check-input" id="do_import_{{ account.id }}" type="checkbox"
-                                                       name="do_import[{{ account.id }}]"
+                                                       name="do_import[{{ budgetId }}][{{ account.id }}]"
                                                        value="1" aria-describedby="accountsHelp"/>
                                                 <label class="form-check-label" for="do_import_{{ account.id }}">"{{ account.name }}" ({{ account.type }})
                                                     should be imported in:
 
-                                                        <select class="form-control form-control-sm" name="accounts[{{ combinedAccount.id }}]">
+                                                        <select class="form-control form-control-sm" name="accounts[{{ account.id }}]">
                                                             {% for ff3Account in ff3Accounts %}
                                                                 <option value="{{ ff3Account.id }}"
                                                                         {% if configuration.getAccounts[combinedAccount.id] == ff3Account.id %}selected{% endif %}

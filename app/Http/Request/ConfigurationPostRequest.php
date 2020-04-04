@@ -62,6 +62,7 @@ class ConfigurationPostRequest extends Request
             'do_mapping'        => $this->convertBoolean($this->get('do_mapping')),
             'mapping'           => $mapping,
             'accounts'          => $this->get('accounts'),
+            'budgets'           => $this->get('budgets'),
         ];
     }
 
@@ -80,7 +81,8 @@ class ConfigurationPostRequest extends Request
             'date_not_before'   => 'date|nullable',
             'date_not_after'    => 'date|nullable',
             'accounts.*'        => 'string',
-            'do_import.*'       => 'numeric',
+            'budgets.*'         => 'string',
+            'do_import.*.*'       => 'numeric',
         ];
     }
 
