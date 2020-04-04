@@ -1,6 +1,6 @@
 <?php
 /**
- * IndexController.php
+ * GetBudgetsResponse.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of the Firefly III YNAB importer
@@ -20,38 +20,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace App\Ynab\Response;
 
-namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Artisan;
+use App\Ynab\Object\Budget;
 
 /**
- * Class IndexController
+ * Class GetBudgetsResponse
  */
-class IndexController extends Controller
+class GetBudgetsResponse extends Response
 {
-    /**
-     * @return RedirectResponse|Redirector
-     */
-    public function flush()
-    {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
-        session()->flush();
-        Artisan::call('cache:clear');
-        Artisan::call('config:clear');
-
-        return redirect(route('index'));
-    }
+    /** @var array */
+    public $budgets;
 
     /**
-     *
+     * @inheritDoc
      */
-    public function index()
+    public function __construct(array $data)
     {
-
-        return view('index');
+        $budgets       = $data['budgets'] ?? [];
+        $this->budgets = [];
+        foreach ($budgets as $budget) {
+            $this->budgets[] = new Budget($budget);
+        }
     }
 }

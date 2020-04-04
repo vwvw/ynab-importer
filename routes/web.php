@@ -41,3 +41,32 @@ Route::get('/flush', 'IndexController@flush')->name('flush');
 // validate access token:
 Route::get('/token', 'TokenController@index')->name('token.index');
 Route::get('/token/validate', 'TokenController@doValidate')->name('token.validate');
+
+// start YNAB import.
+Route::get('/import/start', ['uses' => 'Import\StartController@index', 'as' => 'import.start']);
+Route::post('/import/upload', ['uses' => 'Import\UploadController@upload', 'as' => 'import.upload']);
+
+// configure
+Route::get('/import/budgets', ['uses' => 'Import\BudgetController@index', 'as' => 'import.budgets.index']);
+Route::post('/import/budgets', ['uses' => 'Import\BudgetController@postIndex', 'as' => 'import.budgets.post']);
+
+// configure
+Route::get('/import/configure', ['uses' => 'Import\ConfigurationController@index', 'as' => 'import.configure.index']);
+Route::post('/import/configure', ['uses' => 'Import\ConfigurationController@postIndex', 'as' => 'import.configure.post']);
+
+// download from YNAB
+Route::get('/import/download', ['uses' => 'Import\DownloadController@index', 'as' => 'import.download.index']);
+Route::any('/import/download/start', ['uses' => 'Import\DownloadController@start', 'as' => 'import.download.start']);
+Route::get('/import/download/status', ['uses' => 'Import\DownloadController@status', 'as' => 'import.download.status']);
+
+// do mapping configuration
+Route::get('/import/mapping', ['uses' => 'Import\MappingController@index', 'as' => 'import.mapping.index']);
+Route::post('/import/mapping', ['uses' => 'Import\MappingController@postIndex', 'as' => 'import.mapping.post']);
+
+// upload
+Route::get('/import/sync', ['uses' => 'Import\SyncController@index', 'as' => 'import.sync.index']);
+Route::any('/import/sync/start', ['uses' => 'Import\SyncController@start', 'as' => 'import.sync.start']);
+Route::get('/import/sync/status', ['uses' => 'Import\SyncController@status', 'as' => 'import.sync.status']);
+
+// download config:
+Route::get('/configuration/download', ['uses' => 'Import\ConfigurationController@download', 'as' => 'import.configuration.download']);

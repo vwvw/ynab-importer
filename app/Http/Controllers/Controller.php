@@ -62,6 +62,6 @@ class Controller extends BaseController
             exit;
         }
 
-        app('view')->share('version', config('bunq.version'));
+        app('view')->share('version', config('ynab.version'));
     }
 }
