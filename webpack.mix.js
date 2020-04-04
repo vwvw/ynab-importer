@@ -43,3 +43,4 @@ mix.webpackConfig({
 
 
 mix.js('resources/js/download.js', 'public/js');
+mix.js('resources/js/sync.js', 'public/js');

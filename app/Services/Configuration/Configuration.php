@@ -1,24 +1,4 @@
 <?php
-/**
- * Configuration.php
- * Copyright (c) 2020 james@firefly-iii.org.
- *
- * This file is part of the Firefly III bunq importer
- * (https://github.com/firefly-iii/bunq-importer).
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 
 declare(strict_types=1);
 
@@ -66,6 +46,9 @@ class Configuration
     /** @var array */
     private $accounts;
 
+    /** @var array */
+    private $accountTypes;
+
     /**
      * Configuration constructor.
      */
@@ -85,6 +68,7 @@ class Configuration
         $this->rules                 = true;
         $this->skipForm              = false;
         $this->accounts              = [];
+        $this->accountTypes          = [];
     }
 
     /**
@@ -106,9 +90,9 @@ class Configuration
         $object->dateRangeNumber       = $array['date_range_number'] ?? 30;
         $object->dateRangeUnit         = $array['date_range_unit'] ?? 'd';
         $object->doMapping             = $array['do_mapping'] ?? false;
-        $object->mapping               = $array['mapping'] ?? [];
-        $object->rules                 = $array['rules'] ?? false;
-        $object->skipForm              = $array['skip_form'] ?? false;
+        $object->mapping = $array['mapping'] ?? [];
+        $object->rules = $array['rules'] ?? true;
+        $object->skipForm = $array['skip_form'] ?? false;
         $object->accounts              = $array['accounts'] ?? [];
 
         return $object;
@@ -253,9 +237,9 @@ class Configuration
         $object->dateRangeNumber       = $array['date_range_number'] ?? 30;
         $object->dateRangeUnit         = $array['date_range_unit'] ?? 'd';
         $object->doMapping             = $array['do_mapping'] ?? false;
-        $object->mapping               = $array['mapping'] ?? [];
-        $object->rules                 = $array['rules'] ?? false;
-        $object->skipForm              = $array['skip_form'] ?? false;
+        $object->mapping = $array['mapping'] ?? [];
+        $object->rules = $array['rules'] ?? true;
+        $object->skipForm = $array['skip_form'] ?? false;
         $object->accounts              = $array['accounts'] ?? [];
 
         if ('partial' === $array['date_range']) {
@@ -441,6 +425,31 @@ class Configuration
     {
         $this->skipForm = $skipForm;
     }
+
+    /**
+     * @return array
+     */
+    public function getAccountTypes(): array
+    {
+        return $this->accountTypes;
+    }
+
+    /**
+     * @param array $accountTypes
+     */
+    public function setAccountTypes(array $accountTypes): void
+    {
+        $this->accountTypes = $accountTypes;
+    }
+
+    /**
+     * @param array $mapping
+     */
+    public function setMapping(array $mapping): void
+    {
+        $this->mapping = $mapping;
+    }
+
 
 
     /**

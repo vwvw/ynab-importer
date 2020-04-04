@@ -61,7 +61,7 @@ class Transaction
             'date'                    => $this->date,
             'account_id'              => $this->accountId,
             'account_name'            => $this->accountName,
-            'payee_id'                => $this->accountId,
+            'payee_id'                => $this->payeeId,
             'payee_name'              => $this->payeeName,
             'category_name'           => $this->categoryName,
             'transfer_account_id'     => $this->transferAccountId,

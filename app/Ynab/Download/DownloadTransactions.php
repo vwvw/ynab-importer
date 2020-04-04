@@ -28,6 +28,7 @@ use App\Services\Sync\JobStatus\ProgressInformation;
 use App\Ynab\Request\GetTransactionsRequest;
 use App\Ynab\Response\GetTransactionsResponse;
 use Log;
+use Storage;
 
 /**
  * Class DownloadTransactions
@@ -80,6 +81,8 @@ class DownloadTransactions
         $transactions = array_merge(...$return);
         Log::debug(sprintf('Merged into %d total transactions.', count($transactions)));
 
+        $this->storeDownload($transactions);
+
         return $transactions;
     }
 
@@ -89,6 +92,14 @@ class DownloadTransactions
     public function setDownloadIdentifier(string $downloadIdentifier): void
     {
         $this->downloadIdentifier = $downloadIdentifier;
+    }
+    /**
+     * @param array $data
+     */
+    private function storeDownload(array $data): void
+    {
+        $disk = Storage::disk('downloads');
+        $disk->put($this->downloadIdentifier, json_encode($data, JSON_THROW_ON_ERROR, 512));
     }
 
 }

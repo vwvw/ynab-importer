@@ -51,7 +51,7 @@
                                                 <label class="form-check-label" for="do_import_{{ account.id }}">"{{ account.name }}" ({{ account.type }})
                                                     should be imported in:
 
-                                                        <select class="form-control form-control-sm" name="accounts[{{ account.id }}]">
+                                                        <select class="form-control" name="accounts[{{ account.id }}]">
                                                             {% for ff3Account in ff3Accounts %}
                                                                 <option value="{{ ff3Account.id }}"
                                                                         {% if configuration.getAccounts[combinedAccount.id] == ff3Account.id %}selected{% endif %}
