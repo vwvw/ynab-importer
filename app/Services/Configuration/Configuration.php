@@ -35,6 +35,11 @@ class Configuration
     public const VERSION = 1;
     /** @var int */
     private $version;
+    /** @var array */
+    private $budgets;
+
+    /** @var bool */
+    private $skipBudgetSelection;
 
 
     /**
@@ -42,7 +47,9 @@ class Configuration
      */
     private function __construct()
     {
-        $this->version = self::VERSION;
+        $this->version             = self::VERSION;
+        $this->budgets             = [];
+        $this->skipBudgetSelection = false;
     }
 
     /**
@@ -52,9 +59,11 @@ class Configuration
      */
     public static function fromArray(array $array): self
     {
-        $version         = $array['version'] ?? 1;
-        $object          = new self;
-        $object->version = $version;
+        $version                     = $array['version'] ?? 1;
+        $object                      = new self;
+        $object->version             = $version;
+        $object->budgets             = $array['budgets'] ?? [];
+        $object->skipBudgetSelection = $array['skip_budget_selection'] ?? false;
 
         return $object;
     }
@@ -81,8 +90,10 @@ class Configuration
      */
     public static function fromRequest(array $array): self
     {
-        $object          = new self;
-        $object->version = self::VERSION;
+        $object                      = new self;
+        $object->version             = self::VERSION;
+        $object->budgets             = $array['budgets'] ?? [];
+        $object->skipBudgetSelection = $array['skip_budget_selection'] ?? false;
 
         return $object;
     }
@@ -94,8 +105,10 @@ class Configuration
      */
     private static function fromDefaultFile(array $data): self
     {
-        $object          = new self;
-        $object->version = $data['version'] ?? self::VERSION;
+        $object                      = new self;
+        $object->version             = $data['version'] ?? self::VERSION;
+        $object->budgets             = $data['budgets'] ?? [];
+        $object->skipBudgetSelection = $data['skip_budget_selection'] ?? false;
 
         return $object;
     }
@@ -106,7 +119,42 @@ class Configuration
     public function toArray(): array
     {
         return [
-            'version'           => $this->version,
+            'version'               => $this->version,
+            'budgets'               => $this->budgets,
+            'skip_budget_selection' => $this->skipBudgetSelection,
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function getBudgets(): array
+    {
+        return $this->budgets;
+    }
+
+    /**
+     * @param array $budgets
+     */
+    public function setBudgets(array $budgets): void
+    {
+        $this->budgets = $budgets;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSkipBudgetSelection(): bool
+    {
+        return $this->skipBudgetSelection;
+    }
+
+    /**
+     * @param bool $skipBudgetSelection
+     */
+    public function setSkipBudgetSelection(bool $skipBudgetSelection): void
+    {
+        $this->skipBudgetSelection = $skipBudgetSelection;
+    }
+
 }

@@ -25,15 +25,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Import;
 
-use App\Exceptions\ImportException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\BudgetComplete;
+use App\Http\Request\BudgetPostRequest;
 use App\Services\Configuration\Configuration;
 use App\Services\Session\Constants;
 use App\Services\Storage\StorageService;
 use App\Ynab\Request\GetBudgetsRequest;
 use App\Ynab\Response\GetBudgetsResponse;
-use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -84,19 +83,26 @@ class BudgetController extends Controller
     public function postIndex(BudgetPostRequest $request)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
-        // store config on drive.
+        $fromRequest = $request->getAll();
 
-        $fromRequest   = $request->getAll();
-        $configuration = Configuration::fromRequest($fromRequest);
-        $config        = StorageService::storeContent(json_encode($configuration, JSON_THROW_ON_ERROR, 512));
+        // get config from session
+        $configuration = Configuration::fromArray([]);
+        if (session()->has(Constants::CONFIGURATION)) {
+            $configuration = Configuration::fromArray(session()->get(Constants::CONFIGURATION));
+        }
 
+        // update config
+        $configuration->setBudgets($fromRequest['budgets']);
+        $configuration->setSkipBudgetSelection($fromRequest['skip_budget_selection']);
+
+        // store config in session.
         session()->put(Constants::CONFIGURATION, $configuration->toArray());
 
-        // set config as complete.
-        session()->put(Constants::CONFIG_COMPLETE_INDICATOR, true);
+        // set budget selection done.
+        session()->put(Constants::BUDGET_COMPLETE_INDICATOR, true);
 
         // redirect to import things?
-        return redirect()->route('import.download.index');
+        return redirect()->route('import.accounts.index');
     }
 }
 

@@ -42,7 +42,7 @@
                                 <div class="col-sm-9">
                                     {% for budget in budgets %}
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <input class="form-check-input" name="budgets[]" value="{{ budget.id }}" type="checkbox" id="defaultCheck1">
                                             <label class="form-check-label" for="defaultCheck1">
                                                 <strong><a href="https://app.youneedabudget.com/{{ budget.id }}/budget">{{  budget.name }}</a></strong> ({{ budget.currencyCode }})
                                             </label>
@@ -60,11 +60,11 @@
                                 <div class="col-sm-9">
                                     <div class="form-check">
                                         <input class="form-check-input" {% if configuration.isSkipBudgetSelection %}checked{% endif %} type="checkbox" id="skip_budget_selection"
-                                               name="skip_form" value="1" aria-describedby="skipHelp">
+                                               name="skip_budget_selection" value="1" aria-describedby="skipBudgetHelp">
                                         <label class="form-check-label" for="skip_budget_selection">
                                             Yes
                                         </label>
-                                        <small id="skipHelp" class="form-text text-muted">
+                                        <small id="skipBudgetHelp" class="form-text text-muted">
                                             Skip the budget selection the next time you import and go straight to processing.
                                         </small>
                                     </div>
