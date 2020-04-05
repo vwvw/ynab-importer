@@ -282,6 +282,6 @@ class GenerateTransactions
             $amount = $amount * -1;
         }
 
-        return (string) ($amount / 100);
+        return (string) ($amount / 1000);
     }
 }
