@@ -80,6 +80,8 @@ class GenerateTransactions
             $return[] = $group;
 
         }
+        $return = $this->filterSplitTypes($return);
+
         $this->addMessage(0, sprintf('Parsed %d YNAB transactions for further processing.', count($return)));
 
         return $return;
@@ -92,6 +94,25 @@ class GenerateTransactions
     {
         $this->configuration = $configuration;
         $this->accounts      = $configuration->getAccounts();
+    }
+
+    /**
+     * @param array $group
+     *
+     * @return bool
+     */
+    private function isDifferentTypes(array $group): bool
+    {
+        if (1 === count($group['transactions'])) {
+            return false;
+        }
+        $types = [];
+        /** @var array $transaction */
+        foreach ($group['transactions'] as $transaction) {
+            $types[] = $transaction['type'];
+        }
+
+        return count(array_unique($types)) > 1;
     }
 
     /**
@@ -137,16 +158,45 @@ class GenerateTransactions
     }
 
     /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function filterSplitTypes(array $array): array
+    {
+        $return = [];
+        /** @var array $group */
+        foreach ($array as $group) {
+            if ($this->isDifferentTypes($group)) {
+                // each transaction in the group is a separate transaction now
+                foreach ($group['transactions'] as $transaction) {
+                    $return[] = [
+                        'apply_rules'             => $group['apply_rules'],
+                        'error_if_duplicate_hash' => $group['error_if_duplicate_hash'],
+                        'group_title'             => null,
+                        'transactions'            => [$transaction],
+                    ];
+                }
+                continue;
+            }
+            $return[] = $group;
+        }
+
+        return $return;
+    }
+
+    /**
      * @param array $entry
      *
      * @return array
      */
     private function generateTransaction(array $entry): array
     {
-        $return = [
+        $groupDescription = '' === (string) $entry['memo'] ? '(no description)' : $entry['memo'];
+        $return           = [
             'apply_rules'             => $this->configuration->isRules(),
             'error_if_duplicate_hash' => true,
-            'group_title'             => $entry['memo'],
+            'group_title'             => $groupDescription,
             'transactions'            => [],
         ];
 
@@ -161,7 +211,7 @@ class GenerateTransactions
             $return['transactions'][$index] = [
                 'amount'           => $amount,
                 'type'             => $transaction['amount'] > 0 ? 'deposit' : 'withdrawal',
-                'description'      => $transaction['memo'] ?? '(empty description)',
+                'description'      => '' === (string) $transaction['memo'] ? '(empty description)' : $transaction['memo'],
                 'date'             => $transaction['date'],
                 'notes'            => sprintf('Transaction ID: %s', $transaction['transaction_id']),
                 'source_id'        => null,
