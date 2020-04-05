@@ -50,7 +50,15 @@ class GenerateTransactions
         $return = [];
         /** @var array $entry */
         foreach ($array as $entry) {
-            $return[] = $this->generateTransaction($entry);
+            $group = $this->generateTransaction($entry);
+
+            // check if has transactions:
+            if (0 === count($group['transactions'])) {
+                Log::warning('Filtered out a transaction group with no transactions');
+                continue;
+            }
+            $return[] = $group;
+
         }
         $this->addMessage(0, sprintf('Parsed %d YNAB transactions for further processing.', count($return)));
 
@@ -89,6 +97,26 @@ class GenerateTransactions
     }
 
     /**
+     * @param array $array
+     *
+     * @return array
+     */
+    private function filterEmptyFields(array $array): array
+    {
+        $fields = ['source_id', 'destination_id', 'source_name', 'destination_name'];
+        foreach ($array['transactions'] as $index => $transaction) {
+            foreach ($fields as $field) {
+                if (array_key_exists($field, $transaction) && null === $transaction[$field]) {
+                    unset($array['transactions'][$index][$field]);
+                    Log::debug(sprintf('Removed field "%s"', $field));
+                }
+            }
+        }
+
+        return $array;
+    }
+
+    /**
      * @param array $entry
      *
      * @throws ImportException
@@ -106,11 +134,15 @@ class GenerateTransactions
         $index = 0;
         /** @var array $transaction */
         foreach ($entry['transactions'] as $transaction) {
-            $amount                         = $this->positiveAmount($transaction['amount']);
+            $amount = $this->positiveAmount($transaction['amount']);
+            if (0 === $transaction['amount']) {
+                Log::warning('Skipped transaction because amount is zero.');
+                continue;
+            }
             $return['transactions'][$index] = [
                 'amount'           => $amount,
                 'type'             => $transaction['amount'] > 0 ? 'deposit' : 'withdrawal',
-                'description'      => $transaction['memo'],
+                'description'      => $transaction['memo'] ?? '(empty description)',
                 'date'             => $transaction['date'],
                 'notes'            => sprintf('Transaction ID: %s', $transaction['transaction_id']),
                 'source_id'        => null,
@@ -152,6 +184,7 @@ class GenerateTransactions
             }
             $index++;
         }
+        $return = $this->filterEmptyFields($return);
         return $return;
     }
 

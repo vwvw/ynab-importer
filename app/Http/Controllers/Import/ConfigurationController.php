@@ -79,7 +79,7 @@ class ConfigurationController extends Controller
             $configuration = Configuration::fromArray(session()->get(Constants::CONFIGURATION));
         }
         // if config says to skip it, skip it:
-        if (null !== $configuration && true === $configuration->isSkipConfigurationForm()) {
+        if (null !== $configuration && true === $configuration->isSkipForm()) {
             // skipForm, go to YNAB download
             return redirect()->route('import.download.index');
         }

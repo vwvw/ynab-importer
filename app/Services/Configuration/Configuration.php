@@ -21,10 +21,6 @@ class Configuration
 
     /** @var bool */
     private $skipBudgetSelection;
-
-    /** @var bool */
-    private $skipConfigurationForm;
-
     /** @var string */
     private $dateNotAfter;
     /** @var string */
@@ -83,7 +79,6 @@ class Configuration
         $object->version               = $version;
         $object->budgets               = $array['budgets'] ?? [];
         $object->skipBudgetSelection   = $array['skip_budget_selection'] ?? false;
-        $object->skipConfigurationForm = $array['skip_configuration_form'] ?? false;
         $object->dateNotBefore         = $array['date_not_before'] ?? '';
         $object->dateNotAfter          = $array['date_not_after'] ?? '';
         $object->dateRange             = $array['date_range'] ?? 'all';
@@ -230,7 +225,6 @@ class Configuration
         $object->version               = $array['version'] ?? self::VERSION;
         $object->budgets               = $array['budgets'] ?? [];
         $object->skipBudgetSelection   = $array['skip_budget_selection'] ?? false;
-        $object->skipConfigurationForm = $array['skip_configuration_form'] ?? false;
         $object->dateNotBefore         = $array['date_not_before'] ?? '';
         $object->dateNotAfter          = $array['date_not_after'] ?? '';
         $object->dateRange             = $array['date_range'] ?? 'all';
@@ -258,7 +252,6 @@ class Configuration
             'version'                 => $this->version,
             'budgets'                 => $this->budgets,
             'skip_budget_selection'   => $this->skipBudgetSelection,
-            'skip_configuration_form' => $this->skipConfigurationForm,
             'date_not_before'         => $this->dateNotBefore,
             'date_not_after'          => $this->dateNotAfter,
             'date_range'              => $this->dateRange,
@@ -320,22 +313,6 @@ class Configuration
     public function setSkipBudgetSelection(bool $skipBudgetSelection): void
     {
         $this->skipBudgetSelection = $skipBudgetSelection;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSkipConfigurationForm(): bool
-    {
-        return $this->skipConfigurationForm;
-    }
-
-    /**
-     * @param bool $skipConfigurationForm
-     */
-    public function setSkipConfigurationForm(bool $skipConfigurationForm): void
-    {
-        $this->skipConfigurationForm = $skipConfigurationForm;
     }
 
     /**

@@ -37,6 +37,17 @@ class BudgetController extends Controller
      */
     public function index()
     {
+        // get config from session
+        $configuration = Configuration::fromArray([]);
+        if (session()->has(Constants::CONFIGURATION)) {
+            $configuration = Configuration::fromArray(session()->get(Constants::CONFIGURATION));
+        }
+        // if config says to skip it, skip it:
+        if (null !== $configuration && true === $configuration->isSkipBudgetSelection()) {
+            // skipForm, go to YNAB download
+            return redirect()->route('import.configure.index');
+        }
+
         app('log')->debug(sprintf('Now at %s', __METHOD__));
         $mainTitle = 'Select your budget from YNAB';
         $subTitle  = 'Select the YNAB budget';
