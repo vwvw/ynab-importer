@@ -437,12 +437,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/api-support-classes.git",
-                "reference": "6616c1e8d2323b76bc6e71296a422a2027890b84"
+                "reference": "e4f050b93559ccc94c77ddd27ae71e2ca270801b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/api-support-classes/zipball/6616c1e8d2323b76bc6e71296a422a2027890b84",
-                "reference": "6616c1e8d2323b76bc6e71296a422a2027890b84",
+                "url": "https://api.github.com/repos/JC5/api-support-classes/zipball/e4f050b93559ccc94c77ddd27ae71e2ca270801b",
+                "reference": "e4f050b93559ccc94c77ddd27ae71e2ca270801b",
                 "shasum": ""
             },
             "require": {
@@ -481,10 +481,58 @@
             "description": "API support classes",
             "homepage": "https://github.com/firefly-iii/api-support-classes",
             "keywords": [
-                "api-support-classes",
-                "firefly-iii"
+                "administration",
+                "api",
+                "api support",
+                "assistant",
+                "bills",
+                "budgeting",
+                "budgeting application",
+                "budgeting tool",
+                "budgets",
+                "currency",
+                "dollar",
+                "euro",
+                "finance",
+                "finances",
+                "financial",
+                "financials",
+                "firefly",
+                "firefly iii",
+                "firefly-iii",
+                "help",
+                "helper",
+                "import",
+                "importing",
+                "laravel",
+                "management",
+                "manager",
+                "money",
+                "organizing",
+                "personal finance",
+                "planning",
+                "self hosted",
+                "self-hosted",
+                "tool",
+                "tooling",
+                "transactions",
+                "transfers"
             ],
-            "time": "2020-04-03T14:54:40+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/JC5",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/JC5",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA",
+                    "type": "paypal"
+                }
+            ],
+            "time": "2020-04-05T08:50:04+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",

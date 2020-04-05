@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetComplete.php
+ * VerifyJSON.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of the Firefly III YNAB importer
@@ -22,31 +22,35 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middleware;
 
-use App\Services\Session\Constants;
-use Closure;
-use Illuminate\Http\Request;
+namespace App\Console;
+
+use Exception;
+use JsonException;
 
 /**
- * Class BudgetComplete
+ * Trait VerifyJSON.
  */
-class BudgetComplete
+trait VerifyJSON
 {
     /**
-     * Check if the user has already uploaded files in this session. If so, continue to configuration.
+     * @param string $file
      *
-     * @param Request $request
-     * @param Closure $next
-     *
-     * @return mixed
+     * @return bool
      */
-    public function handle(Request $request, Closure $next)
+    private function verifyJSON(string $file): bool
     {
-        if (session()->has(Constants::BUDGET_COMPLETE_INDICATOR) && true === session()->get(Constants::BUDGET_COMPLETE_INDICATOR)) {
-            return redirect()->route('import.configure.index');
+        // basic check on the JSON.
+        $json = file_get_contents($file);
+        try {
+            $configuration = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        } catch (Exception | JsonException $e) {
+            $message = sprintf('The importer can\'t import: could not decode the JSON in the config file: %s', $e->getMessage());
+            app('log')->error($message);
+
+            return false;
         }
 
-        return $next($request);
+        return true;
     }
 }

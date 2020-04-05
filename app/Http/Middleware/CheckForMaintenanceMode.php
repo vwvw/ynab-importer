@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 /**
  * CheckForMaintenanceMode.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
- * This file is part of the Firefly III YNAB importer 
+ * This file is part of the Firefly III YNAB importer
  * (https://github.com/firefly-iii/ynab-importer).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +25,9 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode as Middleware;
 
+/**
+ * Class CheckForMaintenanceMode
+ */
 class CheckForMaintenanceMode extends Middleware
 {
     /**

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * GetAccountsRequest.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -25,7 +26,6 @@ namespace App\Ynab\Request;
 use App\Exceptions\YnabApiException;
 use App\Exceptions\YnabApiHttpException;
 use App\Ynab\Response\GetAccountsResponse;
-use App\Ynab\Response\GetBudgetsResponse;
 use App\Ynab\Response\Response;
 use GuzzleHttp\Exception\GuzzleException;
 
@@ -62,6 +62,7 @@ class GetAccountsRequest extends Request
         } catch (YnabApiException | GuzzleException $e) {
             throw new YnabApiHttpException($e->getMessage());
         }
+
         return new GetAccountsResponse($data['data'] ?? []);
     }
 

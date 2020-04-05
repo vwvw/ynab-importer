@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Kernel.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -45,6 +46,9 @@ use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * Class Kernel
+ */
 class Kernel extends HttpKernel
 {
     /**

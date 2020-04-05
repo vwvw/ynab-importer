@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 /**
  * EventServiceProvider.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
- * This file is part of the Firefly III YNAB importer 
+ * This file is part of the Firefly III YNAB importer
  * (https://github.com/firefly-iii/ynab-importer).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,8 +26,10 @@ namespace App\Providers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
+/**
+ * Class EventServiceProvider
+ */
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -34,11 +37,12 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
-    ];
+    protected $listen
+        = [
+            Registered::class => [
+                SendEmailVerificationNotification::class,
+            ],
+        ];
 
     /**
      * Register any events for your application.

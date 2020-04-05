@@ -1,4 +1,24 @@
 <?php
+/**
+ * Request.php
+ * Copyright (c) 2020 james@firefly-iii.org
+ *
+ * This file is part of the Firefly III YNAB importer
+ * (https://github.com/firefly-iii/ynab-importer).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 declare(strict_types=1);
 /**
@@ -49,8 +69,8 @@ abstract class Request
     private $uri;
 
     /**
-     * @return Response
      * @throws YnabApiHttpException
+     * @return Response
      */
     abstract public function get(): Response;
 
@@ -135,14 +155,14 @@ abstract class Request
     }
 
     /**
-     * @return Response
      * @throws YnabApiHttpException
+     * @return Response
      */
     abstract public function post(): Response;
 
     /**
-     * @return array
      * @throws YnabApiException
+     * @return array
      */
     protected function authenticatedGet(): array
     {
@@ -166,10 +186,12 @@ abstract class Request
             throw new YnabApiException(sprintf('GuzzleException: %s', $e->getMessage()));
         }
         if (200 !== $res->getStatusCode()) {
-            throw new YnabApiException(sprintf('Error accessing %s. Status code is %d. Body is: %s', $fullUri, $res->getStatusCode(), (string)$res->getBody()));
+            throw new YnabApiException(
+                sprintf('Error accessing %s. Status code is %d. Body is: %s', $fullUri, $res->getStatusCode(), (string) $res->getBody())
+            );
         }
 
-        $body = (string)$res->getBody();
+        $body = (string) $res->getBody();
         $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
         if (null === $json) {
@@ -180,9 +202,8 @@ abstract class Request
     }
 
     /**
-     * @return array
-     * @throws GuzzleException
      * @throws YnabApiException
+     * @return array
      */
     protected function authenticatedPost(): array
     {
@@ -198,7 +219,7 @@ abstract class Request
                 'Authorization' => sprintf('Bearer %s', $this->getToken()),
             ],
             'exceptions' => false,
-            'body'       => (string)json_encode($this->getBody(), JSON_THROW_ON_ERROR, 512),
+            'body'       => (string) json_encode($this->getBody(), JSON_THROW_ON_ERROR, 512),
         ];
 
         $debugOpt = $options;
@@ -207,7 +228,7 @@ abstract class Request
         $res = $client->request('POST', $fullUri, $options);
 
         if (422 === $res->getStatusCode()) {
-            $body = (string)$res->getBody();
+            $body = (string) $res->getBody();
             $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
             if (null === $json) {
@@ -217,10 +238,10 @@ abstract class Request
             return $json;
         }
         if (200 !== $res->getStatusCode()) {
-            throw new YnabApiException(sprintf('Status code is %d: %s', $res->getStatusCode(), (string)$res->getBody()));
+            throw new YnabApiException(sprintf('Status code is %d: %s', $res->getStatusCode(), (string) $res->getBody()));
         }
 
-        $body = (string)$res->getBody();
+        $body = (string) $res->getBody();
         $json = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
 
         if (null === $json) {
