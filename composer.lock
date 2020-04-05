@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "36219fd63762e2a2d1f1e9ffb4ea3886",
+    "content-hash": "0437ea4794f182dbdee683c64dc26609",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -437,12 +437,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/api-support-classes.git",
-                "reference": "b047ab3bebbf090240e3b9be0d0bb640ad2fe6b6"
+                "reference": "6616c1e8d2323b76bc6e71296a422a2027890b84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/api-support-classes/zipball/b047ab3bebbf090240e3b9be0d0bb640ad2fe6b6",
-                "reference": "b047ab3bebbf090240e3b9be0d0bb640ad2fe6b6",
+                "url": "https://api.github.com/repos/JC5/api-support-classes/zipball/6616c1e8d2323b76bc6e71296a422a2027890b84",
+                "reference": "6616c1e8d2323b76bc6e71296a422a2027890b84",
                 "shasum": ""
             },
             "require": {
@@ -484,7 +484,7 @@
                 "api-support-classes",
                 "firefly-iii"
             ],
-            "time": "2020-04-03T14:51:45+00:00"
+            "time": "2020-04-03T14:54:40+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -5406,28 +5406,28 @@
         },
         {
             "name": "nunomaduro/collision",
-            "version": "v4.1.3",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nunomaduro/collision.git",
-                "reference": "a430bce33d1ad07f756ea6cae9afce9ef8670b42"
+                "reference": "d50490417eded97be300a92cd7df7badc37a9018"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/a430bce33d1ad07f756ea6cae9afce9ef8670b42",
-                "reference": "a430bce33d1ad07f756ea6cae9afce9ef8670b42",
+                "url": "https://api.github.com/repos/nunomaduro/collision/zipball/d50490417eded97be300a92cd7df7badc37a9018",
+                "reference": "d50490417eded97be300a92cd7df7badc37a9018",
                 "shasum": ""
             },
             "require": {
                 "facade/ignition-contracts": "^1.0",
                 "filp/whoops": "^2.4",
-                "jakub-onderka/php-console-highlighter": "^0.4",
                 "php": "^7.2.5",
                 "symfony/console": "^5.0"
             },
             "require-dev": {
                 "facade/ignition": "^2.0",
                 "fideloper/proxy": "^4.2",
+                "friendsofphp/php-cs-fixer": "^2.16",
                 "fruitcake/laravel-cors": "^1.0",
                 "laravel/framework": "^7.0",
                 "laravel/tinker": "^2.0",
@@ -5486,7 +5486,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2020-03-07T12:46:00+00:00"
+            "time": "2020-04-04T19:56:08+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -7438,7 +7438,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2.5",
+        "php": "^7.3",
         "ext-json": "*"
     },
     "platform-dev": [],
