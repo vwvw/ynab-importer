@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetComplete.php
+ * ShowVersion.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of the Firefly III YNAB importer
@@ -22,31 +22,48 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middleware;
+namespace App\Console\Commands;
 
-use App\Services\Session\Constants;
-use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Console\Command;
 
 /**
- * Class BudgetComplete
+ * Class ShowVersion
  */
-class BudgetComplete
+class ShowVersion extends Command
 {
     /**
-     * Check if the user has already uploaded files in this session. If so, continue to configuration.
+     * The console command description.
      *
-     * @param Request $request
-     * @param Closure $next
-     *
-     * @return mixed
+     * @var string
      */
-    public function handle(Request $request, Closure $next)
-    {
-        if (session()->has(Constants::BUDGET_COMPLETE_INDICATOR) && true === session()->get(Constants::BUDGET_COMPLETE_INDICATOR)) {
-            return redirect()->route('import.configure.index');
-        }
+    protected $description = 'Echoes the current version and some debug info.';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'ynab:version';
 
-        return $next($request);
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle(): int
+    {
+        $this->line(sprintf('Firefly III YNAB importer v%s', config('ynab.version')));
+        $this->line(sprintf('PHP: %s %s %s', PHP_SAPI, PHP_VERSION, PHP_OS));
+
+        return 0;
     }
 }

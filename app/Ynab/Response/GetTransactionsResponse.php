@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * GetTransactionsResponse.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -50,19 +51,6 @@ class GetTransactionsResponse extends Response implements Countable, Iterator
             $this->collection->push($model);
         }
     }
-
-    /**
-     * @return array
-     */
-    public function toArray(): array {
-        $return = [];
-        /** @var TransactionGroup $group */
-        foreach($this->collection->all() as $group) {
-            $return[] = $group->toArray();
-        }
-        return $return;
-    }
-
 
     /**
      * Count elements of an object.
@@ -125,6 +113,20 @@ class GetTransactionsResponse extends Response implements Countable, Iterator
     public function rewind(): void
     {
         $this->position = 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $return = [];
+        /** @var TransactionGroup $group */
+        foreach ($this->collection->all() as $group) {
+            $return[] = $group->toArray();
+        }
+
+        return $return;
     }
 
     /**

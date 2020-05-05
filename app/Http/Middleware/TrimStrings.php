@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 /**
  * TrimStrings.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
- * This file is part of the Firefly III YNAB importer 
+ * This file is part of the Firefly III YNAB importer
  * (https://github.com/firefly-iii/ynab-importer).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +25,9 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 
+/**
+ * Class TrimStrings
+ */
 class TrimStrings extends Middleware
 {
     /**

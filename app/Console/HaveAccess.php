@@ -1,6 +1,6 @@
 <?php
 /**
- * BudgetComplete.php
+ * HaveAccess.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
  * This file is part of the Firefly III YNAB importer
@@ -22,31 +22,32 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Middleware;
+namespace App\Console;
 
-use App\Services\Session\Constants;
-use Closure;
-use Illuminate\Http\Request;
+use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
+use GrumpyDictator\FFIIIApiSupport\Request\SystemInformationRequest;
 
 /**
- * Class BudgetComplete
+ * Trait HaveAccess.
  */
-class BudgetComplete
+trait HaveAccess
 {
     /**
-     * Check if the user has already uploaded files in this session. If so, continue to configuration.
-     *
-     * @param Request $request
-     * @param Closure $next
-     *
-     * @return mixed
+     * @return bool
      */
-    public function handle(Request $request, Closure $next)
+    private function haveAccess(): bool
     {
-        if (session()->has(Constants::BUDGET_COMPLETE_INDICATOR) && true === session()->get(Constants::BUDGET_COMPLETE_INDICATOR)) {
-            return redirect()->route('import.configure.index');
+        $uri     = (string) config('ynab.uri');
+        $token   = (string) config('ynab.access_token');
+        $request = new SystemInformationRequest($uri, $token);
+        try {
+            $request->get();
+        } catch (ApiHttpException $e) {
+            $this->error(sprintf('Could not connect to Firefly III: %s', $e->getMessage()));
+
+            return false;
         }
 
-        return $next($request);
+        return true;
     }
 }

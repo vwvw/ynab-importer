@@ -1,9 +1,10 @@
 <?php
+declare(strict_types=1);
 /**
  * AuthServiceProvider.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
- * This file is part of the Firefly III YNAB importer 
+ * This file is part of the Firefly III YNAB importer
  * (https://github.com/firefly-iii/ynab-importer).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,8 +24,10 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
+/**
+ * Class AuthServiceProvider
+ */
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -32,16 +35,17 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
-    ];
+    protected $policies
+        = [
+            // 'App\Model' => 'App\Policies\ModelPolicy',
+        ];
 
     /**
      * Register any authentication / authorization services.
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
 

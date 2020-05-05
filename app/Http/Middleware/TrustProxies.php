@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * TrustProxies.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -25,6 +26,9 @@ namespace App\Http\Middleware;
 use Fideloper\Proxy\TrustProxies as Middleware;
 use Illuminate\Http\Request;
 
+/**
+ * Class TrustProxies
+ */
 class TrustProxies extends Middleware
 {
     /**

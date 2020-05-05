@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Exceptions\ImportException;
+use App\Exceptions\YnabApiHttpException;
 use App\Ynab\Request\UserInformationRequest;
 use App\Ynab\Response\UserInformationResponse;
 use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
@@ -45,7 +46,7 @@ class TokenController extends Controller
     /**
      * Check if the Firefly III API responds properly.
      *
-     * @throws ImportException
+     * @throws YnabApiHttpException
      * @return JsonResponse
      */
     public function doValidate(): JsonResponse
@@ -89,8 +90,7 @@ class TokenController extends Controller
     /**
      * Same thing but not over JSON.
      *
-     * @throws ImportException
-     * @throws \App\Exceptions\YnabApiHttpException
+     * @throws YnabApiHttpException
      * @return Factory|RedirectResponse|Redirector|View
      */
     public function index()

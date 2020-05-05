@@ -1,11 +1,31 @@
 <?php
-
+/**
+ * ConfigurationController.php
+ * Copyright (c) 2020 james@firefly-iii.org
+ *
+ * This file is part of the Firefly III YNAB importer
+ * (https://github.com/firefly-iii/ynab-importer).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Import;
 
 use App\Exceptions\ImportException;
+use App\Exceptions\YnabApiHttpException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\ConfigComplete;
 use App\Http\Request\ConfigurationPostRequest;
@@ -64,7 +84,7 @@ class ConfigurationController extends Controller
 
     /**
      * @throws ApiHttpException
-     * @throws ImportException
+     * @throws YnabApiHttpException
      * @return Factory|RedirectResponse|View
      */
     public function index()
@@ -95,7 +115,7 @@ class ConfigurationController extends Controller
      *
      * @return RedirectResponse
      */
-    public function postIndex(ConfigurationPostRequest $request)
+    public function postIndex(ConfigurationPostRequest $request): RedirectResponse
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));
         // store config on drive.
@@ -147,6 +167,25 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * @throws YnabApiHttpException
+     * @return array
+     */
+    private function getApiBudgets(): array
+    {
+        $uri     = (string) config('ynab.api_uri');
+        $token   = (string) config('ynab.api_code');
+        $request = new GetBudgetsRequest($uri, $token);
+        /** @var GetBudgetsResponse $budgets */
+        $budgets = $request->get();
+        $result  = [];
+        foreach ($budgets as $budget) {
+            $result[$budget->id] = $budget->toArray();
+        }
+
+        return $result;
+    }
+
+    /**
      * @throws ApiHttpException
      * @return iterable
      */
@@ -165,7 +204,7 @@ class ConfigurationController extends Controller
     /**
      * @param Configuration $configuration
      *
-     * @throws \App\Exceptions\YnabApiHttpException
+     * @throws YnabApiHttpException
      * @return iterable
      */
     private function getYnabAccounts(Configuration $configuration): iterable
@@ -193,23 +232,5 @@ class ConfigurationController extends Controller
         }
 
         return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function getApiBudgets(): array
-    {
-        $uri     = (string) config('ynab.api_uri');
-        $token   = (string) config('ynab.api_code');
-        $request = new GetBudgetsRequest($uri, $token);
-        /** @var GetBudgetsResponse $budgets */
-        $budgets = $request->get();
-        $result  = [];
-        foreach ($budgets as $budget) {
-            $result[$budget->id] = $budget->toArray();
-        }
-
-        return $result;
     }
 }
