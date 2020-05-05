@@ -23,10 +23,10 @@
 declare(strict_types=1);
 
 return [
-    'version'         => '1.0.0-alpha.2',
+    'version'         => '1.0.0',
     'access_token'    => env('FIREFLY_III_ACCESS_TOKEN', ''),
     'uri'             => env('FIREFLY_III_URI', ''),
     'api_uri'         => 'https://api.youneedabudget.com/v1',
     'api_code'        => env('YNAB_API_CODE', ''),
-    'minimum_version' => '5.1.1',
+    'minimum_version' => '5.2.0',
 ];
