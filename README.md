@@ -28,7 +28,7 @@
 
 This is a tool to import from You Need A Budget (YNAB) into [Firefly III](https://github.com/firefly-iii/firefly-iii). It works by using your YNAB API token and a Firefly III personal access token to access your Firefly III installation's API.
 
-At this moment, the tool is in beta, which means that it may not work as expected. Please bear with me and open all the issues and PR's you like. I greatly appreciate your input!
+If you have questions or comments, please open a ticket in the [main Firefly III repository](https://github.com/firefly-iii/firefly-iii/issues).
 
 ### Purpose
 
@@ -47,7 +47,7 @@ Anybody who uses Firefly III and wants to automatically import YNAB transactions
 You can use this tool in several ways.
 
 1. [Install it on your server using composer](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/installing-and-running/self_hosted).
-2. [Use the Docker-image](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/installing-and-running/docker).
+2. [Use the Docker image](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/installing-and-running/docker).
 
 Generally speaking, it's easiest to use and install this tool the same way as you use Firefly III. And although it features an excellent web-interface, you can also use the command line to import your data.
 
