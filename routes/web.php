@@ -54,7 +54,13 @@ Route::post('/import/budgets', ['uses' => 'Import\BudgetController@postIndex', '
 Route::get('/import/configure', ['uses' => 'Import\ConfigurationController@index', 'as' => 'import.configure.index']);
 Route::post('/import/configure', ['uses' => 'Import\ConfigurationController@postIndex', 'as' => 'import.configure.post']);
 
-
+// navigate back and forth.
+Route::get('/back/start', 'NavController@toStart')->name('back.start');
+Route::get('/back/upload', 'NavController@toUpload')->name('back.upload');
+Route::get('/back/budget', 'NavController@toBudget')->name('back.budget');
+Route::get('/back/config', 'NavController@toConfig')->name('back.config');
+//Route::get('/back/roles', 'NavController@toRoles')->name('back.roles');
+//Route::get('/back/mapping', 'NavController@toRoles')->name('back.mapping');
 
 
 // download from YNAB

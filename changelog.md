@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.1] - 2020-06-21
+
+- Update packages.
+- New configuration for verify TLS and connection timeouts.
+
 ## [1.0.0] - 2020-05-05
 
 This release was preceded by several alpha versions:
