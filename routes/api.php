@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * api.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -18,6 +20,18 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * api.php
+
+ */
+
+declare(strict_types=1);
+
+/**
+ * api.php
+
  */
 
 use Illuminate\Http\Request;

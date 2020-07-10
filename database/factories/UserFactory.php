@@ -1,9 +1,11 @@
 <?php
+
+
 /**
  * UserFactory.php
  * Copyright (c) 2020 james@firefly-iii.org
  *
- * This file is part of the Firefly III YNAB importer 
+ * This file is part of the Firefly III YNAB importer
  * (https://github.com/firefly-iii/ynab-importer).
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,6 +20,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * UserFactory.php
+
+ */
+
+declare(strict_types=1);
+/**
+ * UserFactory.php
+
  */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */

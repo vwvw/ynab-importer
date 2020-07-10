@@ -76,7 +76,7 @@
       }
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^7.4",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -84,7 +84,8 @@
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "rcrowe/twigbridge": "^0.11.3",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-bcmath": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

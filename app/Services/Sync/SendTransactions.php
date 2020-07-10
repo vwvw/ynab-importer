@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SendTransactions.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -20,6 +21,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * SendTransactions.php
+
+ */
+
 declare(strict_types=1);
 
 namespace App\Services\Sync;
@@ -39,9 +45,8 @@ use GrumpyDictator\FFIIIApiSupport\Response\ValidationErrorResponse;
 class SendTransactions
 {
     use ProgressInformation;
-
-    /** @var Configuration */
-    private $configuration;
+    private Configuration $configuration;
+    private string $rootURI;
 
     /**
      * @param array $transactions
@@ -52,6 +57,14 @@ class SendTransactions
     {
         $uri   = (string) config('ynab.uri');
         $token = (string) config('ynab.access_token');
+
+
+        $this->rootURI = config('ynab.uri');
+        if ('' !== (string) config('ynab.vanity_uri')) {
+            $this->rootURI = config('ynab.vanity_uri');
+        }
+        Log::debug(sprintf('The root URI is "%s"', $this->rootURI));
+
         foreach ($transactions as $index => $transaction) {
             app('log')->debug(sprintf('Trying to send transaction #%d', $index), $transaction);
             $this->sendTransaction($uri, $token, $index, $transaction);
@@ -109,8 +122,7 @@ class SendTransactions
             return [];
         }
         $groupId  = $group->id;
-        $uri      = (string) config('ynab.uri');
-        $groupUri = (string) sprintf('%s/transactions/show/%d', $uri, $groupId);
+        $groupUri = (string) sprintf('%s/transactions/show/%d', $this->rootURI, $groupId);
 
         /** @var Transaction $tr */
         foreach ($group->transactions as $tr) {
