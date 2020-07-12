@@ -19,6 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/*
+ * download.js
+
+ */
+
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when

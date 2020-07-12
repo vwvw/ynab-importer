@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * index.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -18,6 +20,17 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * index.php
+
+ */
+
+declare(strict_types=1);
+/**
+ * index.php
+
  */
 
 /**

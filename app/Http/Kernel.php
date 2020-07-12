@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+
 /**
  * Kernel.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -20,6 +21,13 @@ declare(strict_types=1);
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+/**
+ * Kernel.php
+
+ */
+
+declare(strict_types=1);
 
 namespace App\Http;
 
@@ -55,8 +63,6 @@ class Kernel extends HttpKernel
      * The application's global HTTP middleware stack.
      *
      * These middleware are run during every request to your application.
-     *
-     * @var array
      */
     protected $middleware
         = [
@@ -70,8 +76,6 @@ class Kernel extends HttpKernel
 
     /**
      * The application's route middleware groups.
-     *
-     * @var array
      */
     protected $middlewareGroups
         = [

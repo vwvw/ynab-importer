@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ShowVersion.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -20,6 +21,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * ShowVersion.php
+
+ */
+
 declare(strict_types=1);
 
 namespace App\Console\Commands;
@@ -33,14 +39,10 @@ class ShowVersion extends Command
 {
     /**
      * The console command description.
-     *
-     * @var string
      */
     protected $description = 'Echoes the current version and some debug info.';
     /**
      * The name and signature of the console command.
-     *
-     * @var string
      */
     protected $signature = 'ynab:version';
 

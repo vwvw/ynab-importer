@@ -1,5 +1,6 @@
 <?php
-declare(strict_types=1);
+
+
 /**
  * GetTransactionsResponse.php
  * Copyright (c) 2020 james@firefly-iii.org
@@ -19,6 +20,17 @@ declare(strict_types=1);
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/**
+ * GetTransactionsResponse.php
+
+ */
+
+declare(strict_types=1);
+/**
+ * GetTransactionsResponse.php
+
  */
 
 namespace App\Ynab\Response;
