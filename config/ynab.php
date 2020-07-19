@@ -36,4 +36,9 @@ return [
     'api_uri'         => 'https://api.youneedabudget.com/v1',
     'api_code'        => env('YNAB_API_CODE', ''),
     'minimum_version' => '5.3.0',
+    'trusted_proxies' => env('TRUSTED_PROXIES', ''),
+    'connection' => [
+        'verify'  => env('VERIFY_TLS_SECURITY', true),
+        'timeout' => (float) env('CONNECTION_TIMEOUT', 3.14),
+    ],
 ];
