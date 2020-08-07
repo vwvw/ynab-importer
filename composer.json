@@ -83,7 +83,7 @@
         "firefly-iii/api-support-classes": "dev-master",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
-        "rcrowe/twigbridge": "^0.11.3",
+        "rcrowe/twigbridge": "^0.12.1",
         "ext-json": "*",
         "ext-bcmath": "*"
     },
