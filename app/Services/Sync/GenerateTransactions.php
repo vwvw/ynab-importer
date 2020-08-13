@@ -231,14 +231,14 @@ class GenerateTransactions
             }
 
             // double check destination:
-            $accountId = $this->ffAccountId($transaction['payee_id']);
+            $accountId = $this->ffAccountId((string) $transaction['payee_id']);
             if (0 !== $accountId) {
                 $return['transactions'][$index]['destination_id']   = $accountId;
                 $return['transactions'][$index]['destination_name'] = null;
             }
 
             // get transfer account:
-            if (0 === strpos($transaction['payee_name'], 'Transfer : ')) {
+            if (0 === strpos((string) $transaction['payee_name'], 'Transfer : ')) {
                 // payee is one of your own accounts
                 $return['transactions'][$index]['destination_id']   = $this->ffAccountId($transaction['transfer_account_id']);
                 $return['transactions'][$index]['destination_name'] = null;
