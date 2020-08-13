@@ -37,7 +37,6 @@ use App\Services\Sync\JobStatus\ProgressInformation;
 use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
 use GrumpyDictator\FFIIIApiSupport\Request\GetAccountRequest;
 use GrumpyDictator\FFIIIApiSupport\Response\GetAccountResponse;
-use Log;
 
 /**
  * Class GenerateTransactions.
@@ -78,7 +77,7 @@ class GenerateTransactions
 
             // check if has transactions:
             if (0 === count($group['transactions'])) {
-                Log::warning('Filtered out a transaction group with no transactions');
+                app('log')->warning('Filtered out a transaction group with no transactions');
                 continue;
             }
             $return[] = $group;
@@ -153,7 +152,7 @@ class GenerateTransactions
             foreach ($fields as $field) {
                 if (array_key_exists($field, $transaction) && null === $transaction[$field]) {
                     unset($array['transactions'][$index][$field]);
-                    Log::debug(sprintf('Removed field "%s"', $field));
+                    app('log')->debug(sprintf('Removed field "%s"', $field));
                 }
             }
         }
@@ -209,7 +208,7 @@ class GenerateTransactions
         foreach ($entry['transactions'] as $transaction) {
             $amount = $this->positiveAmount($transaction['amount']);
             if (0 === $transaction['amount']) {
-                Log::warning('Skipped transaction because amount is zero.');
+                app('log')->warning('Skipped transaction because amount is zero.');
                 continue;
             }
             $return['transactions'][$index] = [

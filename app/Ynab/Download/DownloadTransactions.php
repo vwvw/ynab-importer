@@ -74,23 +74,23 @@ class DownloadTransactions
         $token     = (string) config('ynab.api_code');
         $sinceDate = '' === $this->configuration->getDateNotBefore() ? null : $this->configuration->getDateNotBefore();
         $return    = [];
-        Log::debug('Now in getTransaction()');
+        app('log')->debug('Now in getTransaction()');
         foreach ($this->configuration->getAccounts() as $budgetId => $list) {
-            Log::debug(sprintf('Now downloading from budget %s', $budgetId));
+            app('log')->debug(sprintf('Now downloading from budget %s', $budgetId));
             foreach ($list as $accountId => $import) {
                 if (false !== $import) {
-                    Log::debug(sprintf('Going to download from account %s', $accountId));
+                    app('log')->debug(sprintf('Going to download from account %s', $accountId));
                     $request = new GetTransactionsRequest($uri, $token, $budgetId, $accountId, $sinceDate);
                     /** @var GetTransactionsResponse $result */
                     $result = $request->get();
                     $array  = $result->toArray();
-                    Log::debug(sprintf('Found %d transaction(s) in account %s', count($array), $accountId));
+                    app('log')->debug(sprintf('Found %d transaction(s) in account %s', count($array), $accountId));
                     $return[] = $array;
                 }
             }
         }
         $transactions = array_merge(...$return);
-        Log::debug(sprintf('Merged into %d total transactions.', count($transactions)));
+        app('log')->debug(sprintf('Merged into %d total transactions.', count($transactions)));
 
         $this->storeDownload($transactions);
 
