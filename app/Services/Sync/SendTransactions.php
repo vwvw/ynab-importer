@@ -63,7 +63,7 @@ class SendTransactions
         if ('' !== (string) config('ynab.vanity_uri')) {
             $this->rootURI = config('ynab.vanity_uri');
         }
-        Log::debug(sprintf('The root URI is "%s"', $this->rootURI));
+        app('log')->debug(sprintf('The root URI is "%s"', $this->rootURI));
 
         foreach ($transactions as $index => $transaction) {
             app('log')->debug(sprintf('Trying to send transaction #%d', $index), $transaction);
