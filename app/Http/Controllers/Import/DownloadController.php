@@ -92,9 +92,8 @@ class DownloadController extends Controller
 
         $downloadJobStatus = JobStatusManager::startOrFindJob($downloadIdentifier);
         if (JobStatus::JOB_DONE === $downloadJobStatus->status) {
-            // TODO DISABLED DURING DEVELOPMENT:
-            //app('log')->debug('Job already done!');
-            //return response()->json($downloadJobStatus->toArray());
+            app('log')->debug('Job already done!');
+            return response()->json($downloadJobStatus->toArray());
         }
         JobStatusManager::setJobStatus(JobStatus::JOB_RUNNING);
 
