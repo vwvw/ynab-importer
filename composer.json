@@ -81,7 +81,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
         "firefly-iii/api-support-classes": "dev-master",
-        "laravel/framework": "^7.0",
+        "laravel/framework": "^8.6",
         "laravel/tinker": "^2.0",
         "rcrowe/twigbridge": "^0.12.1",
         "ext-json": "*",
