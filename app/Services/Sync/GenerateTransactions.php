@@ -256,6 +256,12 @@ class GenerateTransactions
             }
             $index++;
         }
+
+        // make sure that the group title is empty when there is just one transaction (https://github.com/firefly-iii/firefly-iii/issues/4088)
+        if(1 === count($return['transactions'])) {
+            $return['group_title'] = null;
+        }
+
         $return = $this->filterEmptyFields($return);
 
         return $return;
