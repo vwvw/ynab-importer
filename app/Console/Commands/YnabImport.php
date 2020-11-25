@@ -55,7 +55,7 @@ class YnabImport extends Command
      *
      * @var string
      */
-    protected $signature = 'ynab:import {config : The JSON configuration file}';
+    protected $signature = 'importer:import {config : The JSON configuration file}';
 
     /**
      * Create a new command instance.

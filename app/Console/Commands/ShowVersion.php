@@ -44,7 +44,7 @@ class ShowVersion extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'ynab:version';
+    protected $signature = 'importer:version';
 
     /**
      * Create a new command instance.
