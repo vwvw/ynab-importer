@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.4 - 2020-11-25
+
+### Fixed
+
+- #4088 The YNAB importer would add "(no description)" twice to some transactions.
+
+### Changed
+
+- Minimum version of Firefly III is now 5.4.0
+
 ## 2.0.3 - 2020-09-06
 
 ### Fixed
