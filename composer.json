@@ -69,19 +69,15 @@
       {
         "type": "github",
         "url": "https://github.com/sponsors/JC5"
-      },
-      {
-        "type": "paypal",
-        "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=L62W7DVD5ETPC&source=url"
       }
     ],
     "require": {
         "php": "^7.4",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^6.3",
+        "guzzlehttp/guzzle": "^7.2",
         "firefly-iii/api-support-classes": "dev-master",
-        "laravel/framework": "^7.0",
+        "laravel/framework": "^8.6",
         "laravel/tinker": "^2.0",
         "rcrowe/twigbridge": "^0.12.1",
         "ext-json": "*",

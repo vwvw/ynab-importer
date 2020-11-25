@@ -29,13 +29,13 @@
 declare(strict_types=1);
 
 return [
-    'version'         => '2.0.3',
+    'version'         => '2.0.4',
     'access_token'    => env('FIREFLY_III_ACCESS_TOKEN', ''),
     'uri'             => env('FIREFLY_III_URI', ''),
     'vanity_uri'      => envNonEmpty('VANITY_URI'),
     'api_uri'         => 'https://api.youneedabudget.com/v1',
     'api_code'        => env('YNAB_API_CODE', ''),
-    'minimum_version' => '5.3.0',
+    'minimum_version' => '5.4.0',
     'trusted_proxies' => env('TRUSTED_PROXIES', ''),
     'connection' => [
         'verify'  => env('VERIFY_TLS_SECURITY', true),
