@@ -2,11 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## 2.0.5 - 2020-11-25
+
+### Changed
+
+- Commands are now prefixed with `importer:` rather than `ynab:`.
+
 ## 2.0.4 - 2020-11-25
 
 ### Fixed
 
-- #4088 The YNAB importer would add "(no description)" twice to some transactions.
+- [Issue 4088](https://github.com/firefly-iii/firefly-iii/issues/4088) The YNAB importer would add "(no description)" twice to some transactions.
 
 ### Changed
 
