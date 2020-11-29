@@ -78,9 +78,9 @@ class BudgetController extends Controller
         $mainTitle = 'Select your budget from YNAB';
         $subTitle  = 'Select the YNAB budget';
 
-        $uri     = (string) config('ynab.api_uri');
+        $url     = (string) config('ynab.api_url');
         $token   = (string) config('ynab.api_code');
-        $request = new GetBudgetsRequest($uri, $token);
+        $request = new GetBudgetsRequest($url, $token);
         /** @var GetBudgetsResponse $budgets */
         $budgets = $request->get();
 

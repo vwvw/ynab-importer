@@ -70,7 +70,7 @@ class DownloadTransactions
     {
         // for each budget, for each account, start downloading.
         // since_date = date_not_before
-        $uri       = (string) config('ynab.api_uri');
+        $url       = (string) config('ynab.api_url');
         $token     = (string) config('ynab.api_code');
         $sinceDate = '' === $this->configuration->getDateNotBefore() ? null : $this->configuration->getDateNotBefore();
         $return    = [];
@@ -80,7 +80,7 @@ class DownloadTransactions
             foreach ($list as $accountId => $import) {
                 if (false !== $import) {
                     app('log')->debug(sprintf('Going to download from account %s', $accountId));
-                    $request = new GetTransactionsRequest($uri, $token, $budgetId, $accountId, $sinceDate);
+                    $request = new GetTransactionsRequest($url, $token, $budgetId, $accountId, $sinceDate);
                     /** @var GetTransactionsResponse $result */
                     $result = $request->get();
                     $array  = $result->toArray();

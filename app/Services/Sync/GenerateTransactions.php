@@ -275,10 +275,10 @@ class GenerateTransactions
      */
     private function getAccountType(int $accountId): string
     {
-        $uri   = (string) config('ynab.uri');
+        $url   = (string) config('ynab.url');
         $token = (string) config('ynab.access_token');
         app('log')->debug(sprintf('Going to download account #%d', $accountId));
-        $request = new GetAccountRequest($uri, $token);
+        $request = new GetAccountRequest($url, $token);
         $request->setId($accountId);
         /** @var GetAccountResponse $result */
         $result = $request->get();

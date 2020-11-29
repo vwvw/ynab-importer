@@ -55,7 +55,7 @@ class UserInformationRequest extends Request
     {
         $this->setBase($url);
         $this->setToken($token);
-        $this->setUri('user');
+        $this->setUrl('user');
     }
 
     /**

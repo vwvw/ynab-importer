@@ -128,8 +128,8 @@ class MappingController extends Controller
     private function getFireflyIIIAccounts(): array
     {
         $token   = (string) config('ynab.access_token');
-        $uri     = (string) config('ynab.uri');
-        $request = new GetAccountsRequest($uri, $token);
+        $url     = (string) config('ynab.url');
+        $request = new GetAccountsRequest($url, $token);
         /** @var GetAccountsResponse $result */
         $result = $request->get();
         $return = [];

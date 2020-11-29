@@ -63,9 +63,9 @@ class GetTransactionsRequest extends Request
     {
         $this->setBase($url);
         $this->setToken($token);
-        $this->setUri(sprintf('budgets/%s/accounts/%s/transactions', $budgetId, $accountId));
+        $this->setUrl(sprintf('budgets/%s/accounts/%s/transactions', $budgetId, $accountId));
         if (null !== $sinceDate) {
-            $this->setUri(sprintf('budgets/%s/accounts/%s/transactions?since_date=%s', $budgetId, $accountId, $sinceDate));
+            $this->setUrl(sprintf('budgets/%s/accounts/%s/transactions?since_date=%s', $budgetId, $accountId, $sinceDate));
         }
     }
 
