@@ -178,9 +178,9 @@ class ConfigurationController extends Controller
      */
     private function getApiBudgets(): array
     {
-        $uri     = (string) config('ynab.api_uri');
+        $url     = (string) config('ynab.api_url');
         $token   = (string) config('ynab.api_code');
-        $request = new GetBudgetsRequest($uri, $token);
+        $request = new GetBudgetsRequest($url, $token);
         /** @var GetBudgetsResponse $budgets */
         $budgets = $request->get();
         $result  = [];
@@ -198,9 +198,9 @@ class ConfigurationController extends Controller
     private function getFireflyIIIAccounts(): iterable
     {
         // get list of asset accounts in Firefly III
-        $uri     = (string) config('ynab.uri');
+        $url     = (string) config('ynab.url');
         $token   = (string) config('ynab.access_token');
-        $request = new GetAccountsRequest($uri, $token);
+        $request = new GetAccountsRequest($url, $token);
         $request->setType(GetAccountsRequest::ASSET);
 
         /** @var GetAccountsResponse $ff3Accounts */
@@ -218,7 +218,7 @@ class ConfigurationController extends Controller
 
         $budgets    = $configuration->getBudgets();
         $apiBudgets = $this->getApiBudgets();
-        $uri        = (string) config('ynab.api_uri');
+        $url        = (string) config('ynab.api_url');
         $token      = (string) config('ynab.api_code');
         $return     = [];
         /** @var string $budgetId */
@@ -228,7 +228,7 @@ class ConfigurationController extends Controller
                     'budget'   => $apiBudgets[$budgetId] ?? [],
                     'accounts' => [],
                 ];
-            $request           = new YnabAccountsRequest($uri, $token, $budgetId);
+            $request           = new YnabAccountsRequest($url, $token, $budgetId);
             /** @var GetAccountsResponse $set */
             $set = $request->get();
             // TODO better code.

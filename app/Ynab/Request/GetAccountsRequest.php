@@ -61,7 +61,7 @@ class GetAccountsRequest extends Request
         $this->setBase($url);
         $this->setToken($token);
         $this->setBudgetId($budgetId);
-        $this->setUri(sprintf('budgets/%s/accounts', $budgetId));
+        $this->setUrl(sprintf('budgets/%s/accounts', $budgetId));
     }
 
     /**

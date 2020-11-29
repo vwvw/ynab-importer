@@ -72,7 +72,7 @@ abstract class Request
     /** @var string */
     private $token;
     /** @var string */
-    private $uri;
+    private $url;
 
     /**
      * @throws YnabApiHttpException
@@ -147,17 +147,17 @@ abstract class Request
     /**
      * @return string
      */
-    public function getUri(): string
+    public function getUrl(): string
     {
-        return $this->uri;
+        return $this->url;
     }
 
     /**
-     * @param string $uri
+     * @param string $url
      */
-    public function setUri(string $uri): void
+    public function setUrl(string $url): void
     {
-        $this->uri = $uri;
+        $this->url = $url;
     }
 
     /**
@@ -172,15 +172,15 @@ abstract class Request
      */
     protected function authenticatedGet(): array
     {
-        $fullUri = sprintf('%s/%s', $this->getBase(), $this->getUri());
+        $fullUrl = sprintf('%s/%s', $this->getBase(), $this->getUrl());
         if (null !== $this->parameters) {
-            $fullUri = sprintf('%s?%s', $fullUri, http_build_query($this->parameters));
+            $fullUrl = sprintf('%s?%s', $fullUrl, http_build_query($this->parameters));
         }
 
         $client = $this->getClient();
         try {
             $res = $client->request(
-                'GET', $fullUri, [
+                'GET', $fullUrl, [
                          'headers' => [
                              'Accept'        => 'application/json',
                              'Content-Type'  => 'application/json',
@@ -193,7 +193,7 @@ abstract class Request
         }
         if (200 !== $res->getStatusCode()) {
             throw new YnabApiException(
-                sprintf('Error accessing %s. Status code is %d. Body is: %s', $fullUri, $res->getStatusCode(), (string) $res->getBody())
+                sprintf('Error accessing %s. Status code is %d. Body is: %s', $fullUrl, $res->getStatusCode(), (string) $res->getBody())
             );
         }
 
@@ -213,9 +213,9 @@ abstract class Request
      */
     protected function authenticatedPost(): array
     {
-        $fullUri = sprintf('%s/api/v1/%s', $this->getBase(), $this->getUri());
+        $fullUrl = sprintf('%s/api/v1/%s', $this->getBase(), $this->getUrl());
         if (null !== $this->parameters) {
-            $fullUri = sprintf('%s?%s', $fullUri, http_build_query($this->parameters));
+            $fullUrl = sprintf('%s?%s', $fullUrl, http_build_query($this->parameters));
         }
         $client  = $this->getClient();
         $options = [
@@ -231,7 +231,7 @@ abstract class Request
         $debugOpt = $options;
         unset($debugOpt['body']);
 
-        $res = $client->request('POST', $fullUri, $options);
+        $res = $client->request('POST', $fullUrl, $options);
 
         if (422 === $res->getStatusCode()) {
             $body = (string) $res->getBody();

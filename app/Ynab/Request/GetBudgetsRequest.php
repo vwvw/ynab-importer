@@ -51,7 +51,7 @@ class GetBudgetsRequest extends Request
     {
         $this->setBase($url);
         $this->setToken($token);
-        $this->setUri('budgets');
+        $this->setUrl('budgets');
     }
 
     /**

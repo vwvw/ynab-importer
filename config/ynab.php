@@ -29,11 +29,11 @@
 declare(strict_types=1);
 
 return [
-    'version'         => '2.0.5',
+    'version'         => '2.1.0',
     'access_token'    => env('FIREFLY_III_ACCESS_TOKEN', ''),
-    'uri'             => env('FIREFLY_III_URI', ''),
-    'vanity_uri'      => envNonEmpty('VANITY_URI'),
-    'api_uri'         => 'https://api.youneedabudget.com/v1',
+    'url'             => env('FIREFLY_III_URL', ''),
+    'vanity_url'      => envNonEmpty('VANITY_URL'),
+    'api_url'         => 'https://api.youneedabudget.com/v1',
     'api_code'        => env('YNAB_API_CODE', ''),
     'minimum_version' => '5.4.0',
     'trusted_proxies' => env('TRUSTED_PROXIES', ''),

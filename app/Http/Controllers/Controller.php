@@ -50,7 +50,7 @@ class Controller extends BaseController
     {
         $variables = [
             'FIREFLY_III_ACCESS_TOKEN' => 'ynab.access_token',
-            'FIREFLY_III_URI'          => 'ynab.uri',
+            'FIREFLY_III_URL'          => 'ynab.url',
             'YNAB_API_CODE'            => 'ynab.api_code',
         ];
         foreach ($variables as $env => $config) {
@@ -62,8 +62,8 @@ class Controller extends BaseController
             }
         }
         if (
-            false === strpos(config('ynab.uri'), 'http://')
-            && false === strpos(config('ynab.uri'), 'https://')
+            false === strpos(config('ynab.url'), 'http://')
+            && false === strpos(config('ynab.url'), 'https://')
         ) {
             echo 'The URL to your Firefly III instance must begin with "http://" or "https://".';
             exit;

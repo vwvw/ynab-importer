@@ -59,9 +59,9 @@ class TokenController extends Controller
     {
         $response = ['result' => 'OK', 'message' => null];
         $token    = (string) config('ynab.access_token');
-        $uri      = (string) config('ynab.uri');
-        app('log')->debug(sprintf('Going to try and access %s', $uri));
-        $request = new SystemInformationRequest($uri, $token);
+        $url      = (string) config('ynab.url');
+        app('log')->debug(sprintf('Going to try and access %s', $url));
+        $request = new SystemInformationRequest($url, $token);
         try {
             /** @var SystemInformationResponse $result */
             $result = $request->get();
@@ -80,9 +80,9 @@ class TokenController extends Controller
             }
         }
 
-        $uri     = (string) config('ynab.api_uri');
+        $url     = (string) config('ynab.api_url');
         $token   = (string) config('ynab.api_code');
-        $request = new UserInformationRequest($uri, $token);
+        $request = new UserInformationRequest($url, $token);
         /** @var UserInformationResponse $result */
         $result = $request->get();
         if ('' === $result->id) {
@@ -102,9 +102,9 @@ class TokenController extends Controller
     public function index()
     {
         $token = (string) config('ynab.access_token');
-        $uri   = (string) config('ynab.uri');
-        app('log')->debug(sprintf('Going to try and access %s', $uri));
-        $request      = new SystemInformationRequest($uri, $token);
+        $url   = (string) config('ynab.url');
+        app('log')->debug(sprintf('Going to try and access %s', $url));
+        $request      = new SystemInformationRequest($url, $token);
         $errorMessage = 'No error message.';
         $isError      = false;
         $result       = null;
@@ -128,10 +128,10 @@ class TokenController extends Controller
             $isError      = true;
         }
 
-        $uri   = (string) config('ynab.api_uri');
+        $url   = (string) config('ynab.api_url');
         $token = (string) config('ynab.api_code');
 
-        $request = new UserInformationRequest($uri, $token);
+        $request = new UserInformationRequest($url, $token);
         /** @var UserInformationResponse $result */
         $result = $request->get();
         if ('' === $result->id) {

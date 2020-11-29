@@ -43,9 +43,9 @@ trait HaveAccess
      */
     private function haveAccess(): bool
     {
-        $uri     = (string) config('ynab.uri');
+        $url     = (string) config('ynab.url');
         $token   = (string) config('ynab.access_token');
-        $request = new SystemInformationRequest($uri, $token);
+        $request = new SystemInformationRequest($url, $token);
         try {
             $request->get();
         } catch (ApiHttpException $e) {
