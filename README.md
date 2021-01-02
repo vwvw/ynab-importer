@@ -46,32 +46,32 @@ Anybody who uses Firefly III and wants to automatically import YNAB transactions
 
 You can use this tool in several ways.
 
-1. [Install it on your server using composer](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/installing-and-running/self_hosted).
-2. [Use the Docker image](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/installing-and-running/docker).
+1. [Install it on your server using composer](https://docs.firefly-iii.org/other-data-importers/install/self_hosted/).
+2. [Use the Docker image](https://docs.firefly-iii.org/other-data-importers/install/docker/).
 
 Generally speaking, it's easiest to use and install this tool the same way as you use Firefly III. And although it features an excellent web-interface, you can also use the command line to import your data.
 
 ### Upgrade
 
-There are [upgrade instructions](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/upgrading/upgrade) for boths methods of installation.
+There are [upgrade instructions](https://docs.firefly-iii.org/other-data-importers/upgrade/) for boths methods of installation.
 
 ## Usage
 
-The [full usage instructions](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/) can be found in the documentation. Basically, this is the workflow.
+The [full usage instructions](https://docs.firefly-iii.org/other-data-importers/) can be found in the documentation. Basically, this is the workflow.
 
-1. [Set up and configure your tokens](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/installing-and-running/configure).
-2. [Upload your configuration file (optional)](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/importing-data/upload).
-3. [Configure the import](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/importing-data/configure).
-5. [Map values from YNAB to existing values in your database](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/importing-data/map).
-6. [Enjoy the result in Firefly III](https://github.com/firefly-iii/firefly-iii).
+1. [Set up and configure your tokens](https://docs.firefly-iii.org/other-data-importers/install/configure/).
+2. [Upload your configuration file (optional)](https://docs.firefly-iii.org/other-data-importers/usage/upload/).
+3. [Configure the import](https://docs.firefly-iii.org/other-data-importers/usage/configure/).
+4. [Map values from YNAB to existing values in your database](https://docs.firefly-iii.org/other-data-importers/usage/map/).
+5. [Enjoy the result in Firefly III](https://github.com/firefly-iii/firefly-iii).
 
 ## Known issues and problems
 
 Most people run into the same problems when importing data into Firefly III. Read more about those on the following pages:
 
-1. [Issues with your Personal Access Token](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/errors-and-trouble-shooting/token_errors)
-2. [Often seen errors and issues](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/errors-and-trouble-shooting/freq_errors).
-3. [Frequently asked questions](https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/errors-and-trouble-shooting/freq_questions).
+1. [Issues with your Personal Access Token](https://docs.firefly-iii.org/other-data-importers/errors/token_errors/)
+2. [Often seen errors and issues](https://docs.firefly-iii.org/other-data-importers/errors/freq_errors/).
+3. [Frequently asked questions](https://docs.firefly-iii.org/other-data-importers/errors/freq_questions/).
 
 ## Other stuff
 
