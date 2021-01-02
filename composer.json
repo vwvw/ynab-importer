@@ -59,7 +59,7 @@
         "issues": "https://github.com/firefly-iii/firefly-iii/issues",
         "forum": "https://reddit.com/r/FireflyIII",
         "source": "https://github.com/firefly-iii/ynab-importer",
-        "docs": "https://firefly-iii.gitbook.io/firefly-iii-ynab-importer/"
+        "docs": "https://docs.firefly-iii.org/other-data-importers/"
     },
     "funding": [
       {
@@ -72,7 +72,7 @@
       }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4|^8.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
