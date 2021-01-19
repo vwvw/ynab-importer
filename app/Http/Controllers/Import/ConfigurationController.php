@@ -23,14 +23,12 @@
 
 /**
  * ConfigurationController.php
-
  */
 
 declare(strict_types=1);
 
 namespace App\Http\Controllers\Import;
 
-use App\Exceptions\ImportException;
 use App\Exceptions\YnabApiHttpException;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\ConfigComplete;
@@ -41,6 +39,7 @@ use App\Services\Storage\StorageService;
 use App\Ynab\Request\GetAccountsRequest as YnabAccountsRequest;
 use App\Ynab\Request\GetBudgetsRequest;
 use App\Ynab\Response\GetBudgetsResponse;
+use Carbon\Carbon;
 use GrumpyDictator\FFIIIApiSupport\Exceptions\ApiHttpException;
 use GrumpyDictator\FFIIIApiSupport\Request\GetAccountsRequest;
 use GrumpyDictator\FFIIIApiSupport\Response\GetAccountsResponse;
@@ -89,9 +88,9 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * @throws ApiHttpException
-     * @throws YnabApiHttpException
      * @return Factory|RedirectResponse|View
+     * @throws YnabApiHttpException
+     * @throws ApiHttpException
      */
     public function index()
     {
@@ -140,7 +139,7 @@ class ConfigurationController extends Controller
             foreach (array_keys($list) as $accountId) {
                 $accounts[$budgetId][$accountId] = false;
                 if (isset($fromRequest['accounts'][$accountId])) {
-                    $accounts[$budgetId][$accountId] = (int) $fromRequest['accounts'][$accountId];
+                    $accounts[$budgetId][$accountId] = (int)$fromRequest['accounts'][$accountId];
                 }
             }
         }
@@ -149,10 +148,20 @@ class ConfigurationController extends Controller
         $configuration->setSkipForm($fromRequest['skip_form']);
 
         // date etc.
-        $configuration->setDateNotBefore($fromRequest['date_not_before'] ?? '');
+        $configuration->setDateNotAfter('');
+        $configuration->setDateNotBefore('');
+
+        if (array_key_exists('date_not_before', $fromRequest) && $fromRequest['date_not_before'] instanceof Carbon) {
+            $configuration->setDateNotBefore($fromRequest['date_not_before']->format('Y-m-d'));
+        }
+        if (array_key_exists('date_not_after', $fromRequest) && $fromRequest['date_not_after'] instanceof Carbon) {
+            $configuration->setDateNotAfter($fromRequest['date_not_after']->format('Y-m-d'));
+        }
+
+
         $configuration->setDateNotAfter($fromRequest['date_not_after'] ?? '');
         $configuration->setDateRange($fromRequest['date_range'] ?? 'all');
-        $configuration->setDateRangeNumber($fromRequest['date_range_number'] ?? 30);
+        $configuration->setDateRangeNumber((int)($fromRequest['date_range_number'] ?? 30));
 
         // respond to date set:
         $configuration->updateDates();
@@ -173,13 +182,13 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * @throws YnabApiHttpException
      * @return array
+     * @throws YnabApiHttpException
      */
     private function getApiBudgets(): array
     {
-        $url     = (string) config('ynab.api_url');
-        $token   = (string) config('ynab.api_code');
+        $url     = (string)config('ynab.api_url');
+        $token   = (string)config('ynab.api_code');
         $request = new GetBudgetsRequest($url, $token);
         /** @var GetBudgetsResponse $budgets */
         $budgets = $request->get();
@@ -192,14 +201,14 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * @throws ApiHttpException
      * @return iterable
+     * @throws ApiHttpException
      */
     private function getFireflyIIIAccounts(): iterable
     {
         // get list of asset accounts in Firefly III
-        $url     = (string) config('ynab.url');
-        $token   = (string) config('ynab.access_token');
+        $url     = (string)config('ynab.url');
+        $token   = (string)config('ynab.access_token');
         $request = new GetAccountsRequest($url, $token);
         $request->setType(GetAccountsRequest::ASSET);
 
@@ -210,16 +219,16 @@ class ConfigurationController extends Controller
     /**
      * @param Configuration $configuration
      *
-     * @throws YnabApiHttpException
      * @return iterable
+     * @throws YnabApiHttpException
      */
     private function getYnabAccounts(Configuration $configuration): iterable
     {
 
         $budgets    = $configuration->getBudgets();
         $apiBudgets = $this->getApiBudgets();
-        $url        = (string) config('ynab.api_url');
-        $token      = (string) config('ynab.api_code');
+        $url        = (string)config('ynab.api_url');
+        $token      = (string)config('ynab.api_code');
         $return     = [];
         /** @var string $budgetId */
         foreach ($budgets as $budgetId) {
