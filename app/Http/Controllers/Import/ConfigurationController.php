@@ -158,8 +158,6 @@ class ConfigurationController extends Controller
             $configuration->setDateNotAfter($fromRequest['date_not_after']->format('Y-m-d'));
         }
 
-
-        $configuration->setDateNotAfter($fromRequest['date_not_after'] ?? '');
         $configuration->setDateRange($fromRequest['date_range'] ?? 'all');
         $configuration->setDateRangeNumber((int)($fromRequest['date_range_number'] ?? 30));
 
