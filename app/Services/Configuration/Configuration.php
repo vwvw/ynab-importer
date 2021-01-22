@@ -450,8 +450,8 @@ class Configuration
                     [$before, $after] = [$after, $before];
                 }
 
-                $this->dateNotBefore = null === $before ? null : $before->format('Y-m-d');
-                $this->dateNotAfter  = null === $after ? null : $after->format('Y-m-d');
+                $this->dateNotBefore = null === $before ? null : $before;
+                $this->dateNotAfter  = null === $after ? null : $after;
         }
     }
 

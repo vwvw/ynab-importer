@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.1.3 - 2021-01-22
+
+### Fixed
+
+- [Issue 4286](https://github.com/firefly-iii/firefly-iii/issues/4286) Issue with date parsing fixed.
+- Update libraries
+
+## 2.1.2 - 2021-01-19
+
+### Fixed
+
+- [Issue 4286](https://github.com/firefly-iii/firefly-iii/issues/4286) Missing imports broke the importer. Apologies!
+
 ## 2.1.1 - 2021-01-02
 
 ### Changed
